@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2025-01-06T17:39:37.563Z</updated>
+  <updated>2025-01-06T18:07:13.394Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Tasks from medical NLP benchmarks</title>
+    <link href="http://example.com/2025/01/07/Tasks%20from%20medical%20NLP%20benchmarks/"/>
+    <id>http://example.com/2025/01/07/Tasks%20from%20medical%20NLP%20benchmarks/</id>
+    <published>2025-01-06T18:06:00.000Z</published>
+    <updated>2025-01-06T18:07:13.394Z</updated>
+    
+    <content type="html"><![CDATA[<p>这里整理了BLUE、BLURB、CBLUE、MultiMedQA、Biomedical-NLP-Benchmarks、Open Medical-LLM Leaderboard这几个影响力较大的评测里医疗相关任务。</p><ul><li><p>NER：</p><ul><li>BLUE: BC5CDR-disease, BC5CDR-chemical, ShARe&#x2F;CLEFE</li><li>BLURB: BC5-chem, BC5-disease, NCBI-disease, BC2GM, JNLPBA</li><li>CBLUE: CMeEE, IMCS, AGAC</li><li>Biomedical-NLP-Benchmarks: BC5CDR-chemical, NCBI Disease</li></ul></li><li><p>Relation extraction</p><ul><li>BLUE: DDI, ChemProt, i2b2-2010</li><li>BLURB: ChemProt, DDI, GAD</li><li>CBLUE: CMeIE, CMedCausal, AGAC</li><li>Biomedical-NLP-Benchmarks: ChemProt, DDI2013,</li></ul></li><li><p>Event extraction</p><ul><li>CBLUE: CHIP-CDEE</li></ul></li><li><p>Concept normalization</p><ul><li>CBLUE: CHIP-CDN</li></ul></li><li><p>Sentence similarity</p><ul><li>BLUE: MedSTS, BIOSSES</li><li>BLURB: BIOSSES</li></ul></li><li><p>Information retrieval</p><ul><li>CBLUE: KUAKE-IR, CHIP-STS, KUAKE-QTR, KUAKE-QQR</li></ul></li><li><p>Document classification</p><ul><li>BLUE: HoC</li><li>BLURB: HoC</li><li>CBLUE: CHIP-CTC, KUAKE-QIC, CHIP-MDCFNPC</li><li>Biomedical-NLP-Benchmarks: HoC, LitCovid</li></ul></li><li><p>Inference</p><ul><li>BLUE: MedNLI</li></ul></li><li><p>PICO</p><ul><li>BLURB: EBM PICO</li></ul></li><li><p>QA</p><ul><li>BLURB: PubMedQA, BioASQ</li><li>MultiMedQA: MedQA (USMLE), PubMedQA, MedMCQA, MMLU-Clinical knowledge, MMLU Medical genetics, MMLU-Anatomy, MMLU-Professional medicine, MMLU-College biology, MMLU-College medicine</li><li>Biomedical-NLP-Benchmarks: MedQA(5-option), PubMedQA</li></ul></li><li><p>Text generation</p><ul><li><p>CBLUE: MedDG, TextDT</p></li><li><p>MultiMedQA: MultiMedQA, Adversarial (General), Adversarial (Health equity)</p></li></ul></li><li><p>OCR</p><ul><li>CBLUE: CMedOCR</li></ul></li><li><p>Summarization</p><ul><li>Biomedical-NLP-Benchmarks: PubMed, MS^2</li></ul></li><li><p>Simplification</p><ul><li>Biomedical-NLP-Benchmarks: Cochrane, PLOS</li></ul></li></ul><p><strong>Reference</strong></p><p><a href="https://github.com/ncbi-nlp/BLUE_Benchmark">ncbi-nlp&#x2F;BLUE_Benchmark: BLUE benchmark consists of five different biomedicine text-mining tasks with ten corpora.</a></p><p><a href="https://microsoft.github.io/BLURB/">BLURB Leaderboard</a></p><p><a href="https://tianchi.aliyun.com/specials/promotion/2021chinesemedicalnlpleaderboardchallenge">2021中文医疗信息处理挑战榜_CBLUE_智慧医疗 - 阿里云天池</a></p><p><a href="https://github.com/michael-wzhu/PromptCBLUE">michael-wzhu&#x2F;PromptCBLUE: PromptCBLUE: a large-scale instruction-tuning dataset for multi-task and few-shot learning in the medical domain in Chinese</a></p><p><a href="https://github.com/monk1337/MultiMedQA">monk1337&#x2F;MultiMedQA</a></p><p><a href="https://github.com/BIDS-Xu-Lab/Biomedical-NLP-Benchmarks">BIDS-Xu-Lab&#x2F;Biomedical-NLP-Benchmarks: Benchmark Datasets for BioNLP Tasks</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;这里整理了BLUE、BLURB、CBLUE、MultiMedQA、Biomedical-NLP-Benchmarks、Open Medical-LLM Leaderboard这几个影响力较大的评测里医疗相关任务。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;NER：&lt;/p&gt;
+&lt;ul&gt;
+</summary>
+      
+    
+    
+    
+    <category term="Medical Informatics" scheme="http://example.com/categories/Medical-Informatics/"/>
+    
+    
+    <category term="A Stroll Through Medical Informatics" scheme="http://example.com/tags/A-Stroll-Through-Medical-Informatics/"/>
+    
+  </entry>
   
   <entry>
     <title>Tasks from medical NLP challenges</title>
@@ -41,26 +69,6 @@
     
     
     <category term="A Stroll Through Medical Informatics" scheme="http://example.com/tags/A-Stroll-Through-Medical-Informatics/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="http://example.com/2025/01/05/hello-world/"/>
-    <id>http://example.com/2025/01/05/hello-world/</id>
-    <published>2025-01-05T07:44:20.522Z</published>
-    <updated>2025-01-05T07:35:31.277Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; for</summary>
-      
-    
-    
-    
     
   </entry>
   

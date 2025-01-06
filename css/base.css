@@ -197,7 +197,7 @@ a:hover {
   overflow: hidden;
   text-overflow: ellipsis;
   margin-bottom: 10px;
-  font-size: 25px; /* 增大标题字体 */
+  font-size: 2.5rem;
   font-weight: bold; /* 加粗标题 */
 }
 
@@ -408,7 +408,7 @@ a:hover {
 
 .post-details .post-title {
   text-align: center;
-  font-size: 2.2rem;
+  font-size: 2.5rem;
   font-weight: 600;
   color: var(--color-text-a);
   padding-bottom: 10px;
