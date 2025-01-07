@@ -403,11 +403,6 @@ figure .pin-copy {
   font-weight: bolder;
 }
 
-.markdown-body h1 {
-  font-size: 2em;
-  margin: 0.67em 0;
-}
-
 .markdown-body img {
   border-style: none;
 }
@@ -505,36 +500,6 @@ figure .pin-copy {
 .markdown-body h6 {
   margin-top: 0;
   margin-bottom: 0;
-}
-
-.markdown-body h1 {
-  font-size: 32px;
-  font-weight: 600;
-}
-
-.markdown-body h2 {
-  font-size: 24px;
-  font-weight: 600;
-}
-
-.markdown-body h3 {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.markdown-body h4 {
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.markdown-body h5 {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.markdown-body h6 {
-  font-size: 12px;
-  font-weight: 600;
 }
 
 .markdown-body p {
@@ -779,29 +744,34 @@ figure .pin-copy {
 
 .markdown-body h1 {
   padding-bottom: 0.3em;
-  font-size: 2em;
+  font-size: 1.5em;
+  color: var(--color-text-a);
 }
 
 .markdown-body h2 {
   padding-bottom: 0.3em;
-  font-size: 1.5em;
+  font-size: 1.3em;
+  color: var(--color-text-a);
 }
 
 .markdown-body h3 {
-  font-size: 1.25em;
+  font-size: 1.15em;
+  color: var(--color-text-a);
 }
 
 .markdown-body h4 {
   font-size: 1em;
+  color: var(--color-text-a);
 }
 
 .markdown-body h5 {
   font-size: 0.875em;
+  color: var(--color-text-a);
 }
 
 .markdown-body h6 {
   font-size: 0.85em;
-  color: #6a737d;
+  color: var(--color-text-a);
 }
 
 .markdown-body ul,
@@ -1487,6 +1457,17 @@ a:hover {
 .post-details .post-attach {
   font-size: 1.4rem;
   text-align: center;
+  padding-bottom: 10px;
+  color: var(--color-text-a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.post-details .post-count {
+  font-size: 1.4rem;
+  text-align: center;
   padding-bottom: 30px;
   color: var(--color-text-a);
   display: flex;
@@ -1522,7 +1503,7 @@ a:hover {
   flex-wrap: wrap;
 }
 
-.post-attach .post-pubtime, .post-attach .post-tags, .post-attach .post-categories {
+.post-attach .post-pubtime, .post-attach .post-tags, .post-attach .post-categories, .post-count .post-wordcount{
   padding: 0 10px;
   display: flex;
   align-items: center;
@@ -1885,7 +1866,7 @@ a:hover {
 .footer {
   padding-top: 30px;
   font-size: 1.2rem;
-  color: #aaa;
+  color: var(--color-text-a);
 }
 .footer .social {
   padding-bottom: 5px;
@@ -2266,41 +2247,41 @@ a:hover {
   margin-left: 30px;
 }
 .v[data-class="v"] .vwrap .vheader .vinput:focus {
-  border-bottom-color: #808080 !important;
+  border-bottom-color: #ed7d32 !important;
 }
 .v[data-class="v"] .vbtn:active,
 .v[data-class="v"] .vbtn:hover {
-  border-color: #808080 !important;
+  border-color: #ed7d32 !important;
 }
 .v[data-class="v"] .vcards .vcard .vh .vmeta .vat {
-  color: #808080 !important;
+  color: #ed7d32 !important;
 }
 .v[data-class="v"] a {
-  color: #808080 !important;
+  color: #ed7d32 !important;
 }
 .fancybox-progress {
-  background: #808080 !important;
+  background: #ed7d32 !important;
 }
 .markdown-body code {
-  color: #808080;
+  color: #ed7d32;
 }
 .markdown-body a:hover {
-  border-bottom: 2px solid #808080;
+  border-bottom: 2px solid #ed7d32;
 }
 .markdown-body blockquote {
-  border-color: #808080;
+  border-color: #ed7d32;
 }
 .toc-link:hover::after {
-  background-color: #808080;
+  background-color: #ed7d32;
 }
 .toc-link.active::after {
-  background-color: #808080;
+  background-color: #ed7d32;
 }
 .navbar ul li a:hover::after {
-  background-color: #808080;
+  background-color: #ed7d32;
 }
 .navbar ul li.active a::after {
-  background-color: #808080;
+  background-color: #ed7d32;
 }
 .markdown-body h1 .headerlink::before,
 .markdown-body h2 .headerlink::before,
@@ -2308,5 +2289,5 @@ a:hover {
 .markdown-body h4 .headerlink::before,
 .markdown-body h5 .headerlink::before,
 .markdown-body h6 .headerlink::before {
-  color: #808080;
+  color: #ed7d32;
 }

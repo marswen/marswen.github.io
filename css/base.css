@@ -417,6 +417,17 @@ a:hover {
 .post-details .post-attach {
   font-size: 1.4rem;
   text-align: center;
+  padding-bottom: 10px;
+  color: var(--color-text-a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.post-details .post-count {
+  font-size: 1.4rem;
+  text-align: center;
   padding-bottom: 30px;
   color: var(--color-text-a);
   display: flex;
@@ -452,7 +463,7 @@ a:hover {
   flex-wrap: wrap;
 }
 
-.post-attach .post-pubtime, .post-attach .post-tags, .post-attach .post-categories {
+.post-attach .post-pubtime, .post-attach .post-tags, .post-attach .post-categories, .post-count .post-wordcount{
   padding: 0 10px;
   display: flex;
   align-items: center;
