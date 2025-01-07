@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="John Doe" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Popular tools for medical NLP 
+      
+      
+      |
+    
+     Hexo
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4803714_znkx49050if.css">
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Oranges</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/projects/">
+          <a href="/projects/">Projects</a>
+        </li>
+      
+
+      <li class="nav-item">
+          
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+      </li>
+
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Popular tools for medical NLP</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2025-01-07
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="Categories"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/Medical-Informatics/" title="Medical Informatics">
+                    <b>#</b> Medical Informatics
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/A-Stroll-Through-Medical-Informatics/" title="A Stroll Through Medical Informatics">
+                    #A Stroll Through Medical Informatics
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="medical-language-extraction-and-encoding-medlee">Medical
+Language Extraction and Encoding (MedLee)</h1>
+<p>1994年，使用Quintus Prolog开发，原始版本有三个组件：parser, phrase
+regularization, encoder。</p>
+<p>parser使用语法规则和语义字典解析文本结构。语义字典里包含单词类、短语类和常用忽略词类，单词类包含语义类别和规范词形；短语类还额外包含首词用于索引，分为phrase和aphrase两种，aphrase意为atomic
+phrases，即不可分的短语，phrase会在后面进一步检查是否有非连续匹配结果；常用忽略词类跳过不作解析。语法规则里每一条包含两部分，第一部分是由语义类别和字符构成的用于匹配的语法模板，否定修饰也作为一种语义类别，语法模板间有嵌套，第二部分是将匹配文本转为结构化形式的翻译规则。每条规则要求完全匹配减少歧义，如果出现匹配多条，取共现率更高的模板。</p>
+<p>phrase
+regularization主要是解决第一阶段结果里不连续短语的标准化，对短语类的phrase类，利用组合映射模板检查解析结果里是否可以转换为标准短语。</p>
+<p>encoder将结构化输出结果里的词通过词和语义类别匹配转换为受控词表概念，所使用的同义词表叫Medical
+Entity Dictionary
+(MED)。最后对结果里可能存在的确定性修饰和否定修饰不一致做后处理，方法是给确定性修饰词按否定到确定给5-0分值，不一致情况下取最高分值。</p>
+<p>结构化数据模型包括发现 (Finding Structure) 和修饰 (Modifier)
+两部分，这两部分均作为概念，再附加关系，关系的值为领域概念。</p>
+<p>后续版本在前面增加pre-processing组件，通过词表查询得到单词和短语的位置和类别。在parser部分增加error
+recovery组件，如果没有解析到有效结果，通过模糊匹配、启发式规则纠正句法异常、局部解析、术语上下文关系推断等方法多轮尝试解析。</p>
+<h1 id="metamap">MetaMap</h1>
+<p>2001年，使用Java开发。</p>
+<p>解析文本：首先，使用SPECIALIST minimal commitment
+parser生成浅层句法分析得到一组名词短语
+(SPECIALIST词表里没有唯一标签的使用Xerox词性标注句法标签)。然后，对每个短语使用SPECIALIST词表和附加同义词表生成变体，保留变体方式和基于变体方式的距离得分。接下来检索候选词，检索所有包含至少一个变体的Metathesaurus字符串的候选集。然后评估候选词，基于中心性
+(包含于head)、变异性
+(逆距离分数均值)、覆盖度和凝固度计算候选词映射的强度并排序，得分最高者选为结果映射。</p>
+<p>数据维护：包括人工过滤、词法过滤、类型过滤和句法过滤。人工过滤手动去除数字、单字符、歧义等词条。词法过滤根据一些字词级别特征规则过滤错误词条。类型过滤根据词条类型过滤缩写、编码等词条。句法过滤对短语句法解析里包含多个简单短语的词条过滤掉。根据浏览或数据处理粒度不同情况，使用不同宽松程度的过滤策略。</p>
+<h1 id="health-information-text-extraction-hitex">Health Information
+Text Extraction (HITEx)</h1>
+<p>2006年，基于GATE (General Architecture for Text
+Engineering)，使用Java开发，属于i2b2项目。</p>
+<p>包含11个组件，主要覆盖三条工作流：</p>
+<ul>
+<li><p>输入医疗记录 - 章节拆分 - 章节过滤 - 分句 - 分词 - 词性标注 -
+名词短语识别 - UMLS概念匹配 - 否定检测 - 输出包含修饰的UMLS概念</p></li>
+<li><p>输入医疗记录 - 章节拆分 - 章节过滤 - 分句 - n-gram统计 - 分类 -
+输出文档分类</p></li>
+<li><p>输入医疗记录 - 章节拆分 - 基于正则表达式匹配概念 -
+输出概念列表</p></li>
+</ul>
+<p>章节拆分通过章节标题字典匹配。章节过滤根据规则选取子集。</p>
+<p>分句和分句使用正则表达式。词性标注使用GATE的基于规则的方法识别。名词短语使用GATE的基于规则和字典的方法识别。</p>
+<p>UMLS概念匹配首先尝试完全匹配，如果不成功则对字符串进行词干提取、规范化和截断等操作后再匹配。否定检测使用NexEx-2算法。</p>
+<p>分类器使用Weka实现SVM输入n-gram对吸烟状态进行分类。</p>
+<h1
+id="mayo-clinical-text-analysis-and-knowledge-extraction-system-ctakes">Mayo
+clinical Text Analysis and Knowledge Extraction System (cTAKES)</h1>
+<p>2010年，基于UIMA (Unstructured Information Management Architecture)
+和OpenNLP，使用Java开发，在PTB、GENIA和Mayo Clinic EMR语料上训练。</p>
+<p>通过一组序贯组件依次处理临床文本。组件包括：句子边界检测器，分词器，标准化器，词性标注器，浅层解析器，命名实体识别标注器
+(包括状态和否定检测)。</p>
+<p>句子边界检测器扩展了OpenNLP的基于最大熵模型的检测工具，预测句号、问号或感叹号是否是句子的结尾。</p>
+<p>分词器包括两部分，一个是通过空格和标点符号切分，一个是通过有限状态机实现规则合并各种类型的词组。</p>
+<p>标准化器是封装的SPECIALIST Lexical Tools里的标准化组件。</p>
+<p>词性标注器和浅层解析器是封装OpenNLP模块。</p>
+<p>命名实体识别是通过名词短语内查询字典实现的，通过浅层句法解析获得名词短语，字典是包括SNOMED-CT和RxNORM的UMLS子集和扩展的同义词表。</p>
+<p>否定标注是NegEx算法，类似方法检测实体状态。</p>
+<h1
+id="clinical-language-annotation-modeling-and-processing-toolkit-clamp">Clinical
+Language Annotation, Modeling, and Processing Toolkit (CLAMP)</h1>
+<p>2018年，基于UIMA，使用Java开发。</p>
+<p>也是流水线组件架构。组件包括：句子边界检测，分词，词性标注，章节标题检测，缩写重组和消歧，命名实体识别，断言和否定，UMLS编码，规则引擎。</p>
+<p>句子边界检测：两种方法，OpenNLP的检测工具和可配置的规则检测方法。</p>
+<p>分词：三种方法，OpenNLP分词，基于分词符分词，可配置的规则分词。</p>
+<p>词性标注：机器学习标注方法。</p>
+<p>章节标题检测：基于可扩展的常见标题字典。</p>
+<p>缩写重组和消歧：基于字典和上下文分析的融合方法。</p>
+<p>命名实体识别：三种方法，基于CRF，基于字典，基于正则表达式。</p>
+<p>断言和否定：两种方法，基于机器学习的方法，结果有六个类别：存在，不存在，可能，有条件的，假设的，与此患者无关。基于可配置字典的NegEx。</p>
+<p>UMLS编码器：利用向量空间模型把实体映射到UMLS CUI上。</p>
+<p>规则引擎：利用Apache Ruta规则引擎配置规则。</p>
+<h1 id="scispacy-medspacy">scispaCy, medspaCy</h1>
+<p>scispaCy：2019年。medspaCy：2021年。基于spaCy，使用Python开发。spaCy高性能、多语言、扩展性强，类似UIMA采用流水线思想，面向对象，通过属性维护组件处理结果。</p>
+<p>spaCy的标准组件包括：文本向量化、分词、词性标注、依存句法解析、分句、命名实体识别、词形还原等。</p>
+<p>scispaCy利用生物医学语料重新训练了词性标注、依存解析和命名实体识别，且增加缩写检测器、实体链接器和上下位检测。</p>
+<p>medspaCy：根据医疗文本重新自定义分词规则、句子检测规则
+(PyRuSH)、基于SecTag的章节检测规则、概念匹配模板和正则表达式、UMLS概念抽取
+(QuickUMLS)、断言检测规则 (ConText)。</p>
+<h1 id="stanza-biomed">Stanza Biomed</h1>
+<p>2020年，基于Stanza，使用Python开发，效果优于scispaCy。</p>
+<p>在Stanza基础上提供适合生物医学数据的句法分析
+(包括分句、分词、词形还原、词性标注、依存句法分析) 和命名实体识别。</p>
+<p>分句和分词作为字符级别序列标注任务通过轻量级RNN联合学习。词性标注通过Bi-LSTM标注XPOS和UPOS，并进一步通过biaffine机制提升两种标签的一致性。词形还原结合字典查询和字符级seq2seq，另外利用seq2seq
+encoder输出做分类预测是否直接使用小写或原文，优化长序列效果。依存句法分析通过Bi-LSTM+biaffine预测。命名实体识别分别学习字符级别和词级别语言模型，结合字符向量和词向量利用Bi-LSTM+CRF预测实体标签。</p>
+<h1 id="ascle">Ascle</h1>
+<p>2023年，使用Python开发。</p>
+<p>包括三个主要模块：基础NLP函数，生成函数，检索模块。</p>
+<p>基础NLP函数包括：缩写抽取，命名实体识别，分句，文档聚类，分词，词性标注，否定检测，实体链接，上下位检测，文档摘要
+(用summa库的textrank算法)，UMLS概念抽取，多选问答。主要使用spaCy、Stanza和BERT实现。</p>
+<p>生成函数包括：问答，文本摘要，文本简化，机器翻译。问答通过RAG实现，先抽取问题里的实体，在UMLS里检索实体相关三元组，基于相似性排序和模型排序等方式得到候选上下文后再回答。</p>
+<p>检索模块包括：连接MySQL上的MIMIC数据库，结构化查询记录，关键词搜索。</p>
+<p><strong>References</strong></p>
+<p><a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/7719797/">A general
+natural-language text processor for clinical radiology - PubMed</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://www.semanticscholar.org/paper/Natural-language-processing-in-an-operational-Friedman-Hripcsak/2bc1e254bea4f96f8cc6fdabb62288d48db6197f">Natural
+language processing in an operational clinical information system |
+Semantic Scholar</a></p>
+<p><a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/11825149/">Effective mapping
+of biomedical text to the UMLS Metathesaurus: the MetaMap program -
+PubMed</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://lhncbc.nlm.nih.gov/ii/information/publications.html#MetaMap">MetaMap
+Publications</a></p>
+<p><a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/16872495/">Extracting
+principal diagnosis, co-morbidity and smoking status for asthma
+research: evaluation of a natural language processing system -
+PubMed</a></p>
+<p><a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/20819853/">Mayo clinical
+Text Analysis and Knowledge Extraction System (cTAKES): architecture,
+component evaluation and applications - PubMed</a></p>
+<p><a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/29186491/">CLAMP - a toolkit
+for efficiently building customized clinical natural language processing
+pipelines - PubMed</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1902.07669">[1902.07669] ScispaCy:
+Fast and Robust Models for Biomedical Natural Language
+Processing</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2106.07799">[2106.07799] Launching
+into clinical space with medspaCy: a new clinical text processing
+toolkit in Python</a></p>
+<p><a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/34157094/">Biomedical and
+clinical English model packages for the Stanza Python NLP library -
+PubMed</a></p>
+<p><a target="_blank" rel="noopener" href="https://pubmed.ncbi.nlm.nih.gov/39361955/">Ascle-A Python
+Natural Language Processing Toolkit for Medical Text Generation:
+Development and Evaluation Study - PubMed</a></p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1401.0569">[1401.0569] Natural
+Language Processing in Biomedicine: A Unified System Architecture
+Overview</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2025/01/07/Models-in-biomedical-domain/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#medical-language-extraction-and-encoding-medlee"><span class="toc-text">Medical
+Language Extraction and Encoding (MedLee)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#metamap"><span class="toc-text">MetaMap</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#health-information-text-extraction-hitex"><span class="toc-text">Health Information
+Text Extraction (HITEx)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#mayo-clinical-text-analysis-and-knowledge-extraction-system-ctakes"><span class="toc-text">Mayo
+clinical Text Analysis and Knowledge Extraction System (cTAKES)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#clinical-language-annotation-modeling-and-processing-toolkit-clamp"><span class="toc-text">Clinical
+Language Annotation, Modeling, and Processing Toolkit (CLAMP)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#scispacy-medspacy"><span class="toc-text">scispaCy, medspaCy</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#stanza-biomed"><span class="toc-text">Stanza Biomed</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ascle"><span class="toc-text">Ascle</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/marswen">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:dongwen930910@gmail.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+        <li>
+          
+              <a title="rss" href="/atom.xml">
+                <i class="iconfont icon-rss"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/marswen">Copyright © 2025 marswen</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Popular%20tools%20for%20medical%20NLP + '&url=' + http%3A%2F%2Fexample.com%2F2025%2F01%2F07%2FPopular-tools-for-medical-NLP%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2025/01/07/Popular-tools-for-medical-NLP/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
