@@ -382,8 +382,9 @@
         <h1 id="总体思想">总体思想</h1>
 <p>对一个字段开发抽取算法的过程本质是寻找确认相应信息的最低信息熵的路径，通过优化存在依赖关系的各个环节，提升总体表现。</p>
 <p><span class="math display">\[
-\argmin{-\log{P(x)}}
-\]</span><span class="math display">\[
+argmin{-\log{P(x)}}
+\]</span></p>
+<p><span class="math display">\[
 P(x_1, x_2, … x_n) = P(x_1|x_2, … x_n)·P(x_2|x_3, … x_n) …
 P(x_{n-1}|x_n)·P(x_n)
 \]</span></p>
