@@ -13,7 +13,7 @@
   
   <title>
     
-      Tag 
+      Cases of clinical decision support system 
       
       
       |
@@ -337,21 +337,155 @@
 
 
 
-  <!-- 标签页 url形式：https://yoursite/tags/ -->
-  <div class="container tag-index">
-    <div>
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/A-Stroll-Through-Medical-Informatics/" rel="tag">A Stroll Through Medical Informatics</a><span class="tag-list-count">8</span></li></ul>
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Cases of clinical decision support system</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2025-01-07
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="Categories"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/Medical-Informatics/" title="Medical Informatics">
+                    <b>#</b> Medical Informatics
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/A-Stroll-Through-Medical-Informatics/" title="A Stroll Through Medical Informatics">
+                    #A Stroll Through Medical Informatics
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="brigham-and-womens-hospitalpartners-healthcare">Brigham and
+Women’s Hospital/Partners HealthCare</h1>
+<p>为患者开药时，系统会建议患者特定的剂量和用药频率，另外也会展示药物过敏、药物实验室检查、药物疾病检查、药物妊娠检查、药物相互作用、重复用药、药物成本、针对特定临床情况的可能替代药物等常见功能。例如：地高辛医嘱界面会展示最新的肾功能值、血清钾值和地高辛水平；血液制品医嘱会显示输血限制和上次交叉配血的结果。初始医嘱后会触发后续医嘱建议提醒医生。例如：让患者卧床休息时，检查是否存在肝素医嘱，如果没找到会建议皮下肝素以预防深静脉血栓形成。使用Beers标准对老年用药知识库持续更新。对药物选择、剂量指导、频率建议、后续医嘱、ADE降低、用药错误率降低有积极影响。</p>
+<p>实验室检查医嘱界面会显示费用，以降低费用。给定时间间隔内重复下检验医嘱时提醒重复。</p>
+<p>影像检查时提醒可能的冗余检查，例如：提供肺栓塞的预检查概率
+(基于临床怀疑水平和D-二聚体状态)，减少急诊CT肺血管造影；对疑似阑尾炎的腹部X光检查会提醒低效用并建议更高收益的检查；不要为腰痛患者开MRI。</p>
+<p>交接患者时，提供包括药物和近期重要检验检查等信息的患者列表摘要。</p>
+<p>对警报提醒分级以减少忽略。</p>
+<p>使用临床流程工具集成特定条件的模板和基于知识的医嘱，以支持同时进行临床记录、结构化数据采集和决策支持。</p>
+<p>通过评估一系列结构化数据，包括实验室结果、药物、ICD-9诊断代码和生命体征，识别多种目标疾病的潜在的未记录的问题列表。</p>
+<p>患者可通过个人健康记录查看医疗记录并与医务人员线上交流。</p>
+<h1 id="intermountain-healthcare">Intermountain Healthcare</h1>
+<p>不同类型的临床问题可能需要不同类别的计算机辅助模型。有两种类型，一类侧重于狭义的医疗环境，逻辑可能简单或复杂，数据要求适中，如以下四种。</p>
+<ul>
+<li><p>对临床数据发出警报：实验室警报、呼吸机断开通知、早期识别生理恶化。</p></li>
+<li><p>对记录的决策提出批评和新的合理建议：血制品医嘱评审</p></li>
+<li><p>建议一组适合患者需求的诊断或治疗方法：根据复杂的标准化流程制定呼吸机管理方案</p></li>
+<li><p>回顾性提取多个患者数据，总结评估医疗质量并反馈</p></li>
+</ul>
+<p>另一类使用原始医疗数据判定诊断实体，例如：</p>
+<ul>
+<li><p>通过检查病历数据里的皮疹、呼吸频率变化、心率、听力、精神状态、癫痫发作、过敏反应、腹泻、发烧等症状和实验室检查、药物数据，持续监测药物不良事件。</p></li>
+<li><p>使用微生物实验室、护理图表、化学实验室、接诊处、手术室、药房、放射科和呼吸治疗的信息，识别院内感染。</p></li>
+<li><p>利用生命体征、实验室检查、患者病史、体格检查、胸片等提取数据，识别急诊潜在肺炎。</p></li>
+<li><p>通过感染部位、患者状况、感染方式、医院处置、患者年龄和性别，回顾既往病例，推荐合适的抗生素。</p></li>
+</ul>
+<h1 id="diagnostic-decision-support-systems">Diagnostic Decision Support
+Systems</h1>
+<p>一种帮助临床医生完成诊断过程的一个或多个组成步骤的基于计算机的算法。早期文献将其分为这些：临床算法，包括分析功能的临床数据库，数学病理生理模型，模式识别系统，贝叶斯统计系统，决策分析系统，符号推理
+(“专家”系统)。</p>
+<p>逻辑 (谓词演算，一阶逻辑)
+和概率推理都是医学推理的重要组成部分。还有一个方案是启发式推理，即基于经验法则的推理，结合了两者的特点，但又保留了根本区别。基于模糊集理论和贝叶斯信念网络的系统克服启发式和简单贝叶斯模型的局限。神经网络提供了新方法，但简单的单层网络学习到的权重与贝叶斯概率类似或相同，早期缺少数据限制了其应用。</p>
+<p>1961年的用于诊断先天性心脏病的系统是首批基于贝叶斯规则的医疗应用系统。第一个实用的贝叶斯系统是1974年的急性腹痛诊断系统，但仍需医生对结果再做思考。</p>
+<p>1957年的用于诊断血液疾病的HEME是最早采用启发式方法的系统之一，也是最早使用疾病状态诊断标准表的系统之一，先根据症状计算概率，然后让用户比较结果表现是否与患者类似，逐步增加置信度，启发式地将存储的疾病状态描述术语与患者疾病描述词汇匹配。1969年的CONSIDER和1985年的RECONSIDER系统使用启发式词匹配技术识别Current
+Medical Information and
+Terminology里描述的疾病。1979年的EXPERT系统被广泛用于开发利用诊断标准表的系统。</p>
+<p>1973年的MYCIN将基于规则的专家系统引入了临床诊断和治疗，识别导致患者菌血症或脑膜炎的微生物。</p>
+<p>1974年的INTERNIST-1仅让用户提供各类临床表现信息，医生的角色是被动观察者，仅回答是否，程序包揽所有诊断和推理。1990左右这种”希腊神谕”模式被抛弃了，要充分利用用户知识和系统能力优势。</p>
+<p>1986年的R-QMR，输入临床用户想要解释的最多十个发现，输出疾病组的排序列表解释所有输入，每个疾病组由一到四种相互关联的疾病组成
+(例如：疾病A易患疾病B并导致疾病C)。</p>
+<p>当代有三个系统值得一提：VisualDx, DXplain, ISABEL：</p>
+<p>VisualDx是一个用于皮肤病诊断的系统，包含一个大型皮肤病学图像及疾病描述知识库，可按各种条件检索病例，还有症状表现示意图。</p>
+<p>DXplain是一个鉴别诊断系统，输入一组临床发现生成可能解释或相关的诊断排名列表。包含2600
+多种疾病的描述，5700多种临床表现，为每种疾病提供不超过10个参考文献。使用交互式格式来收集临床信息，并利用贝叶斯逻辑的修改形式来推导出临床解释。灵感来自INTERNIST-1。</p>
+<p>ISABEL是一个鉴别诊断、分诊和案例教学的工具，将患者的体征和症状转化为相关疾病列表或分诊建议。基于机器学习，包含10000多种疾病，超过25000种症状变现，也支持自由文本，结果可链接到其他出版物知识库。</p>
+<p><strong>References</strong></p>
+<p><a
+target="_blank" rel="noopener" href="https://link.springer.com/book/10.1007/978-3-319-31913-1">Clinical
+Decision Support Systems: Theory and Practice | SpringerLink</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2025/01/07/Methods-for-information-extraction/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2025/01/07/Train-of-thought-for-research/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#brigham-and-womens-hospitalpartners-healthcare"><span class="toc-text">Brigham and
+Women’s Hospital&#x2F;Partners HealthCare</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#intermountain-healthcare"><span class="toc-text">Intermountain Healthcare</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#diagnostic-decision-support-systems"><span class="toc-text">Diagnostic Decision Support
+Systems</span></a></li></ol>
+      
     </div>
   </div>
-  
 
   
+<script src="/js/catalog.js"></script>
 
-  
 
-  
 
-  
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
 
 
         
@@ -439,12 +573,12 @@
       </a>
       <div class="share-content hidden">
         
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + tags + '&url=' + http%3A%2F%2Fexample.com%2Ftags%2Findex.html + '" target="_blank" title="Twitter">
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Cases%20of%20clinical%20decision%20support%20system + '&url=' + http%3A%2F%2Fexample.com%2F2025%2F01%2F07%2FCases-of-clinical-decision-support-system%2F + '" target="_blank" title="Twitter">
             <i class="iconfont icon-twitter"></i>
           </a>
         
         
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/tags/index.html" target="_blank" title="Facebook">
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2025/01/07/Cases-of-clinical-decision-support-system/" target="_blank" title="Facebook">
             <i class="iconfont icon-facebooksquare"></i>
           </a>
         

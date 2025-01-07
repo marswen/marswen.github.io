@@ -13,7 +13,7 @@
   
   <title>
     
-      Tag 
+      Train of thought for research 
       
       
       |
@@ -337,21 +337,103 @@
 
 
 
-  <!-- 标签页 url形式：https://yoursite/tags/ -->
-  <div class="container tag-index">
-    <div>
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/A-Stroll-Through-Medical-Informatics/" rel="tag">A Stroll Through Medical Informatics</a><span class="tag-list-count">8</span></li></ul>
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Train of thought for research</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2025-01-07
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="Categories"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/Medical-Informatics/" title="Medical Informatics">
+                    <b>#</b> Medical Informatics
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/A-Stroll-Through-Medical-Informatics/" title="A Stroll Through Medical Informatics">
+                    #A Stroll Through Medical Informatics
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>医学自然语言处理或临床决策支持相关的文献里提到最早的工作大概在20世纪60年代，JBI在2001年前叫Computers
+and Biomedical
+Research，最早出版时间是1967年，也算互相印证了。字面上就可以看到，医学信息学最初就是承接computer在生物医学领域的工作，所以看以前的论文，五花八门，有很多例如信号处理、基因数据分析、图像重建、认知科学、计算生物学、物理建模等非常理论的研究，后来就慢慢地聚焦informatics了，即关注医疗活动里信息的流动，一些非常具体的技术工作可能就成为生物医学工程的范畴了，因为本身医学不算纯理工科，有很多人文关怀和社会研究的内容，医学信息学也在专职研究群体扩大的情况下逐步明确自己的范围。所以，医学信息学是由所涉及的研究内容确定的，而不是从基础理论演绎分化出来的，从以前到现在都呈现这样的特征，因此某些领域的发展是离散的，并非逐步构建理论体系。医疗信息系统也是逐步发展起来的，并非一开始就画好了完整的蓝图，一开始可能只是基本的图像管理和传输，慢慢地开始增加患者信息管理模块、电子病历模块、电子医嘱模块、决策支持功能等，很多研究内容也伴随其发展而变化。</p>
+<p>出于对电子病历数据的利用
+(归类、关联、检索、推理等)，医学自然语言处理得到很多研究关注。医学自然语言处理是自然语言处理的分支，跟随其技术发展而发展，但医学文本语言和自然语言有很大差异，最初的符号主义自然语言处理工具泛化性有限，医学语言可能相当于一种方言甚至新的语言，因此医学语言处理领域的研究者需要做很多工作，那些规则都独一无二，甚至换个环境也要重做，从业者有稳定的工单可以接。最基础的工作就是命名实体识别了，再复杂一些抽取关系和属性了，抽取出的结果和用户查询时用词有可能匹配不上，要对抽取结果标准化，需要构建术语标准了，信息抽取出的孤立结果如何成为知识，需要利用本体来组织。各个系统间多源异构数据如何存储如何通信，需要更大范围互联互通标准了。在统计机器学习方法
+(最大熵模型、HMM、CRF等)
+被应用到医学自然语言处理后，通用领域自然语言处理和医学自然语言处理的特殊点开始减少，最大的差别在于训练数据，在技术上可以完全复用，当然涉及到规则兜底的部分还是需要针对具体任务具体设计。在BERT时代，医学语料预训练的模型比通用模型在医学任务上有更好的效果，提示预训练模型需要领域数据学习领域知识。在生成式AI时代，当预训练数据足够多模型规模足够大时，医学领域数据不足以训练出超越通用领域的模型，通用模型在医学问题上可以直接取得很好的效果。专门研究医学自然语言处理是否还有必要。</p>
+<p>以信息抽取为核心的医学自然语言处理到此都还没有涉及到医疗应用，都还在技术问题，无论是非结构化数据的抽取还是结构化数据的再利用，都应该导向促进医疗服务提升，异常指标提醒、药物不良事件检测、住院时长或再入院预测、外部知识库检索等都可以划归到广义的临床决策支持。临床决策支持的研究范围非常繁杂，方法也是五花八门，但无论是逻辑规则，还是知识库推理，又或是模型预测，本质都是预测建模问题，这些流行方法的演变和人工智能界符号主义和连接主义的演变是同步的，输入一定的临床信息，输出一个判定结果，判定结果通过用户接口表现为一定指导行为。曾经的逻辑规则、知识库推理、贝叶斯概率等方式，和我们现在通过临床数据构建机器学习模型是一样的模式。所有这些临床决策支持工具的初衷归根结底就是满足用户的信息需求，相当于给医生外部插件，让医生能更高效更多维度地处理临床数据，就如同karpathy描述的计算器会成为大脑的插件，扩展其在算术领域的计算能力。生成式AI相比判定式机器学习在规划推理方面能力显著且透明，给了我们新的算子——逻辑推理，知识的表达方式不再会对知识推理效率有太大限制，当然图推理方式在大范围分散知识推理方面仍有优势，这应该是临床决策支持系统的新机遇。</p>
+<p><strong>References</strong></p>
+<p><a
+target="_blank" rel="noopener" href="https://jamanetwork.com/journals/jama/article-abstract/331443">A
+Mathematical Approach to Medical Diagnosis: Application to Congenital
+Heart Disease | JAMA | JAMA Network</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://cs.nyu.edu/cs/projects/lsp/LSP_intro.html">Introduction to
+the Linguistic String Project</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://www.microsoft.com/en-us/research/blog/the-power-of-prompting/">The
+Power of Prompting - Microsoft Research</a></p>
+<p><a target="_blank" rel="noopener" href="https://karpathy.ai/blog/calculator.html">I love
+calculator</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2025/01/07/Cases-of-clinical-decision-support-system/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
     </div>
+    
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
   </div>
-  
 
-  
-
-  
-
-  
-
-  
 
 
         
@@ -439,12 +521,12 @@
       </a>
       <div class="share-content hidden">
         
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + tags + '&url=' + http%3A%2F%2Fexample.com%2Ftags%2Findex.html + '" target="_blank" title="Twitter">
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Train%20of%20thought%20for%20research + '&url=' + http%3A%2F%2Fexample.com%2F2025%2F01%2F07%2FTrain-of-thought-for-research%2F + '" target="_blank" title="Twitter">
             <i class="iconfont icon-twitter"></i>
           </a>
         
         
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/tags/index.html" target="_blank" title="Facebook">
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2025/01/07/Train-of-thought-for-research/" target="_blank" title="Facebook">
             <i class="iconfont icon-facebooksquare"></i>
           </a>
         
