@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="John Doe" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Models in biomedical domain 
+      
+      
+      |
+    
+     Hexo
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4803714_znkx49050if.css">
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Oranges</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/projects/">
+          <a href="/projects/">Projects</a>
+        </li>
+      
+
+      <li class="nav-item">
+          
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+      </li>
+
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Models in biomedical domain</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2025-01-07
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="Categories"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/Medical-Informatics/" title="Medical Informatics">
+                    <b>#</b> Medical Informatics
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/A-Stroll-Through-Medical-Informatics/" title="A Stroll Through Medical Informatics">
+                    #A Stroll Through Medical Informatics
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="biobert">BioBERT</h2>
+<p>时间：2019</p>
+<p>网络结构: 同BERT</p>
+<p>预训练数据：4.5Bpubmed abstracts, 13.5B PMC full text</p>
+<p>分词：同BERT使用wordpiece，但使用BERT
+base原有词表（为了使通用领域训练的BERT可以复用）。</p>
+<p>预训练：使用BERTbase权重继续预训练，v1.0对pubmed训练200K步，对PMC训练270K步，v1.1在此基础上再用pubmed训练1M步。最大序列长度512，batch
+size
+192，其他参数同BERT。使用8个V100，v1.0训练超过10天，v1.1训练约23天。</p>
+<p>下游任务微调：NER：计算输出token标签概率，评估F1，RE：把实体词替换为特殊标签，对CLS
+token做分类，评估F1，QA：计算输出token作为答案头尾的概率，评估MRR。</p>
+<p>结果：总体上在各项任务中BioBERT优于BERT，但v1.1不总是比v1.0好，BioBERT相比SOTA不存在绝对优势。</p>
+<h2 id="clinicalbert--alsentzer">ClinicalBERT- Alsentzer</h2>
+<p>时间：2019</p>
+<p>网络结构: 同BERT</p>
+<p>预训练数据：MIMICIII v1.4里约2M notes</p>
+<p>预训练：分别使用BERTbase和BioBERT权重继续预训练，训练数据又分别使用全部notes和仅出院小结。Dup
+factor取5，Batchsize
+32，最大序列长度128，学习率5e-5，训练150K步。其他使用默认参数。所有训练任务使用1个TITAN
+X训练了18天。</p>
+<p>下游任务微调：MedNLI：评估accuracy，对CLS token做分类。i2b2
+NER：计算输出token标签概率，评估F1。</p>
+<p>结果：在去隐私任务上新模型未表现优势，其他任务上新模型强于BERT
+base，和BioBERT持平或不如，但从BioBERT继续预训练会有一定进步。</p>
+<h2 id="clinicalbert-huang">ClinicalBERT – Huang</h2>
+<p>时间：2019</p>
+<p>网络结构: 同BERT</p>
+<p>预训练数据：MIMICIII</p>
+<p>预训练：使用BERTbase权重继续预训练，按入院将所有记录五折划分，取四折每次住院对应的出院小结作为训练数据。先用最大序列长度128，batch
+size 64，训练100K步，再用最大序列长度512，batch size 8，训练100K步。</p>
+<p>下游任务微调：对输出二分类预测30天再入院，过长文本分割后用最大概率和平均概率计算最终概率，分别把出院小结及刚入院时记录加出院小结作为输入。评估AUROC。</p>
+<p>结果：在30天再入院任务上，BERT比其他表征方法都好，且attention可解释。</p>
+<h2 id="scibert">SciBERT</h2>
+<p>时间：2019</p>
+<p>网络结构: 同BERT</p>
+<p>预训练数据：SemanticScholar随机采样1.14M论文，其中18%计算机领域，82%生物医学领域，包含3.17B
+token。</p>
+<p>预训练：类似BERT预训练方法，从头开始预训练，模型大小和配置与BERT
+base相同。用语料区分大小写分别新建30k字典。先用最大序列长度128训练直到loss不再降低。再用最大序列长度512继续训练。对标的BERT用base权重初始化后，用原有字典，继续预训练。SciBERT用一个八核TPU
+v3训练了7天，BERT继续预训练花了5天。</p>
+<p>下游任务微调：NER：cased输出加线性层分类，评估F1，PICO抽取：uncased输出加线性层分类，评估F1。文本分类：uncased
+CLS token输出加线性层分类，评估F1。关系分类：cased CLS
+token输出加线性层分类，评估F1。依存分析：输出加biaffine矩阵，评估labeled
+(LAS) and unlabeled(UAS) attachment scores。</p>
+<p>结果：SciBERT在两个领域所有任务均优于BERT继续预训练，微调优于固定词向量训练下游网络。但最佳结果与SOTA相比各有千秋。</p>
+<h2 id="bluebert">BlueBERT</h2>
+<p>时间：2019</p>
+<p>网络结构: 同BERT</p>
+<p>预训练数据：Pubmed摘要和MIMIC III临床记录。</p>
+<p>预训练：分别使用BERTbase和large权重继续预训练，字典、最长序列长度和其他配置与BERT相同。在Pubmed上训练5M步，在MIMIC
+III上训练0.2M步。</p>
+<p>下游任务微调：句相似：CLS
+token分类，pearson分数。NER：token分类，评估F1。关系分类：实体替换为特殊字符，CLS
+token分类，评估F1。文档多标签分类：每个标签CLS
+token分类，评估F1。推断：CLStoken分类，评估F1。</p>
+<p>结果：BlueBERT在所有任务上都超过SOTA，但large不一定比base表现好，原因可能是MIMIC数据太短，large没训练好。</p>
+<h2 id="g-bert">G-BERT</h2>
+<p>时间：2019</p>
+<p>网络结构:
+首先对药物和诊断用编码本体计算向量，对初始化编码向量，利用目标编码与所有子编码关系，通过一层graph
+attention
+network，再利用目标编码与所有父编码关系，通过一层GAT，作为BERT的输入向量，向量维度75，注意力头4。BERT输入去掉了位置编码，输入向量维度300，2个4头注意力。</p>
+<p>预训练数据：MIMICIII每一次visit的药物和诊断编码。</p>
+<p>预训练：预训练任务仿照原始任务调整为给定visit预测编码和药物与诊断互相预测，给定visit预测编码目标是最大化实际出现编码概率最小化未出现编码概率，药物与诊断互相预测是给定一类编码预测另一类编码。预训练5轮。</p>
+<p>下游任务微调：预测推荐药物：对每一次visit，计算药物和诊断的向量均值，拼接本次之前药物和诊断向量及本次诊断向量，对所有药物做分类。评估Jaccard、F1、AUC。</p>
+<p>结果：GAT和BERT都有一定提升，最终险胜SOTA。</p>
+<h2 id="behrt">BEHRT</h2>
+<p>时间：2019</p>
+<p>网络结构:
+嵌入层包括诊断编码、位置、年龄、分段。每位患者visit的诊断编码序列用SEP间隔。分段交叉使用两个值，区分不同visit。用贝叶斯优化确定模型参数，最终使用6层12注意力头，中间层维度512，隐藏层维度288。</p>
+<p>预训练数据：ClinicalPractice Research Datalink, hospital episode
+statistics。从CPRD初始8M名患者数据里，经过一系列过滤，最终使用1.6M名患者数据。</p>
+<p>预训练：使用MLM的方法预训练。</p>
+<p>下游任务微调：预测下次visit、未来6个月、未来12个月疾病发生，用输出对所有诊断分类，评估average
+precision score和AUROC。</p>
+<p>结果：在疾病预测任务里优势明显。</p>
+<h2 id="biomed-roberta">BioMed-RoBERTa</h2>
+<p>时间：2020</p>
+<p>网络结构: 同RoBERTa</p>
+<p>预训练数据：S2ORC的2.68M篇论文全文，7.55B token。领域任务数据。</p>
+<p>预训练：配置与RoBERTa相同。分为domain-adaptive
+pretraining和task-adaptivepretraining，DAPT用领域语料继续预训练，训练一轮共12.5K步。TAPT用具体任务的训练数据继续预训练，共100轮，然后再微调。</p>
+<p>下游任务微调：关系分类，评估F1。句子分类，评估F1。</p>
+<p>结果：领域语料预训练能提升效果，任务语料预训练能进一步提升，但不相关领域预训练会削弱效果。</p>
+<h2 id="pubmedbert">PubMedBERT</h2>
+<p>时间：2020</p>
+<p>网络结构: 同BERT</p>
+<p>预训练数据：Pubmed摘要</p>
+<p>预训练：使用wholeword
+masking，不区分大小写，新建字典。从头开始预训练，模型大小和配置与BERT
+base相同。Batch size 8192，训练了62500步，16个V100训练了5天。</p>
+<p>下游任务微调：NER：token分类，评估F1。PICO抽取：token分类，评估F1。关系分类：实体替换为特殊字符，CLS
+token分类，评估F1。句相似：CLS
+token分类，pearson分数。文档分类：每个标签CLS
+token分类，评估F1。问答：CLStoken分类，评估F1。</p>
+<p>结果：领域从头预训练比通用模型继续预训练好。</p>
+<h2 id="biomegatron">BioMegatron</h2>
+<p>时间：2020</p>
+<p>网络结构: 同Megatron-LM，尺寸分别为345M、800M、1.2B。</p>
+<p>预训练数据：4.5BPubmed摘要，1.6B PMC全文</p>
+<p>预训练：同Megatron-LM</p>
+<p>下游任务微调：NER：token分类，评估F1。关系分类：实体替换为特殊字符，CLS
+token分类，评估F1。问答：token分类，评估ACC和MRR。</p>
+<p>结果：不同任务里各种参数的影响不同，不存在一个绝对好的模型，需根据任务分析。</p>
+<h2 id="bio-lm">bio-lm</h2>
+<p>时间：2020</p>
+<p>网络结构: 同BERT。</p>
+<p>预训练数据：Pubmed摘要，PMC全文，MIMIC III 记录</p>
+<p>预训练：分别使用RoBERTabase和large结构，用新字典，随机初始化。遵循RoBERTa的训练方法。使用混合精度训练500k步。蒸馏时，先正常预训练base模型，再与large模型对齐，训练50k步。</p>
+<p>下游任务微调：序列标注和分类。</p>
+<p>结果：领域字典比通用字典好，预训练语料对任务影响大，更大模型对序列标注影响显著，蒸馏模型有提升。</p>
+<h2 id="diseasebert">diseaseBERT</h2>
+<p>时间：2020</p>
+<p>网络结构: 同BERT。</p>
+<p>预训练数据：从MeSH得到疾病列表，用wikipedia弱监督得到每个疾病的各方面知识，构造疾病-主题-内容数据。</p>
+<p>预训练：mask主题和疾病，通过内容数据预测，预训练MLM。</p>
+<p>下游任务微调：问答，推断，NER。</p>
+<p>结果：通过疾病相关知识继续预训练能增强原有模型表现。</p>
+<h2 id="med-bert">Med-BERT</h2>
+<p>时间：2021</p>
+<p>网络结构:
+嵌入层包括诊断编码、序列号、visit。不使用CLS和SEP标记。BERT结构里，6层6头32维注意力，嵌入和隐藏层维度192。</p>
+<p>预训练数据：CernerHealth
+Facts，从初始68M名患者里过滤到28M名患者。</p>
+<p>预训练：每条数据仅mask一个诊断编码。预训练任务包括MLM和预测是否住院过长时间。最长序列长度512，batch
+size 32，训练超45M步，用2080Ti训练一周。</p>
+<p>下游任务微调：未来疾病预测，评估AUROC。</p>
+<p>结果：单纯预测结果不比SOTA强，但和其他模型一起能优于SOTA。</p>
+<h2 id="electramed">ELECTRAMed</h2>
+<p>时间：2021</p>
+<p>网络结构: 同ELECTRA</p>
+<p>预训练数据：PubMed摘要</p>
+<p>预训练：从头预训练，使用SciBERT的词表，使用ELECTRA base同样参数。</p>
+<p>下游任务微调：NER，RE，QA。</p>
+<p>结果：效果不行。</p>
+<h2 id="kebiolm">KeBioLM</h2>
+<p>时间：2021</p>
+<p>网络结构:
+基于PubmedBERT，先对输出token分类获得所有实体提及，得到文本向量，用提及结果在实体嵌入里寻找最相似的一组UMLS实体，按相似度加权平均后获得实体向量，对BERT输出里提及替换为文本向量加实体向量。通过TransE获得实体嵌入。8层文本编码，4层文本和实体融合。</p>
+<p>预训练数据：PubMedDS里3.5M文档。</p>
+<p>预训练：先10000步热身，batch size to 512, max sequence length to 512,
+and training epochsto 2。预训练任务为MLM、实体检测、实体链接。</p>
+<p>下游任务微调：NER：计算输出token标签概率，评估F1，RE：把实体词替换为特殊标签，对CLS
+token做分类，评估F1。</p>
+<p>结果：实体知识显著提升效果。</p>
+<h2 id="biolinkbert">BioLinkBERT</h2>
+<p>时间：2022</p>
+<p>网络结构: 同BERT</p>
+<p>预训练数据：Pubmed摘要，通过引用构造连续、随机、关联三种关系的文本对数据。</p>
+<p>预训练：参数与PubMedBERTbase相同，从头预训练，batch size 8,192, and
+train for 62,500steps。在8个A100上用fp16训练7天。</p>
+<p>下游任务微调：BLURB，QA。</p>
+<p>结果：比PubMedBERT效果好，大尺寸的模型效果又有提升。</p>
+<h2 id="gatortron">GatorTron</h2>
+<p>时间：2022</p>
+<p>网络结构: 同Megatron-LM</p>
+<p>预训练数据：UF约2M名患者记录, MIMIC III, PubMed 摘要和PMC全文,
+Wikipedia.</p>
+<p>预训练：从头开始预训练，包括3种尺寸的模型，预训练任务包括MLM和SOP。参数与PubMedBERT
+base相同，从头预训练，batch size 8,192,and train for 62,500
+steps。在992个A100上分布式训练。</p>
+<p>下游任务微调：临床概念抽取，关系分类，文本语义相似，自然语言推断，医学问答。</p>
+<p>结果：相比同类模型显著提升。</p>
+<h2 id="dragon">DRAGON</h2>
+<p>时间：2022</p>
+<p>网络结构: 用BioLinkBERT生成向量表示，用GreaseLM进行输入融合。</p>
+<p>预训练数据：PubMed摘要，UMLS</p>
+<p>预训练：使用BioLinkBERTlarge权重继续预训练。把文本中的实体提及关联到实体节点，对每个节点选择2跳节点，保留这些节点间的关系。将三元组按模板构造句子，通过BioLinkBERT得到实体向量，用所有包含实体的句子里实体向量均值作为实体向量。给所有文本序列前和实体序列前分别添加特殊标记以计算输入的整体表示，将文本和kg输入通过GreaseLM融合得到输出。预训练任务包括MLM和关联预测。</p>
+<p>下游任务微调：医学问答。</p>
+<p>结果：在推理任务上比其他模型都强。</p>
+<h2 id="medgpt">MedGPT</h2>
+<p>时间：2021</p>
+<p>网络结构: 使用GPT2架构，通过Population Based Training，n_layers=6,
+n_attention_heads=2, embedding_dim=300,weight_decay=0.14, lr=4.46e-5,
+batch_size=32 and warmup_steps=15。</p>
+<p>预训练数据：King’s College Hospital (KCH) NHS Foundation
+Trust里1M名患者，MIMIC-III。</p>
+<p>预训练：提取年龄和病人相关的非否定的SNOMED-CT疾病编码作为训练序列，标准语言模型。实验以下改进是否有效果：memorytokens,
+residual attention, ReZero, Talking Heads, Sparse Top, Rotaryembeddings,
+GLU, Word2Vec。</p>
+<p>下游任务微调：预测未来疾病。</p>
+<p>结果：没有BERT系模型的结果。</p>
+<h2 id="biogpt">BioGPT</h2>
+<p>时间：2021</p>
+<p>网络结构: 使用GPT2 medium架构，</p>
+<p>预训练数据：标准语言模型训练。</p>
+<p>预训练：新建词表，标准语言模型。</p>
+<p>下游任务微调：关系抽取，QA，文本分类。</p>
+<p>结果：优于BERT系模型。</p>
+<h2 id="gatortrongpt">GatorTronGPT</h2>
+<p>时间：2021</p>
+<p>网络结构: 同GPT3架构，5B和20B两个版本。</p>
+<p>预训练数据：UFHealth  Integrated Data Repository的82B文本，195B
+Pile。</p>
+<p>预训练：使用Megatron-LM从头训练。</p>
+<p>下游任务微调：关系抽取，QA，病历生成。</p>
+<p>结果：和BERT系模型比较不充分。</p>
+<h2 id="med-palm">Med-PaLM</h2>
+<p>时间：2022</p>
+<p>网络结构: 同Flan-PaLM。</p>
+<p>预训练：使用Megatron-LM从头训练。</p>
+<p>下游任务微调：MultiMedQA。</p>
+<p>结果：和BERT系模型比较不充分。</p>
+<h2 id="biomedgpt">BiomedGPT</h2>
+<p>时间：2022</p>
+<p>网络结构: encoder-decoder架构，每层加上a post-attention Layer Norm
+(LN) [62], post-first-FFN LN, andhead-wise scaling within
+self-attention，</p>
+<p>预训练：从头训练。</p>
+<p>下游任务微调：</p>
+<p>结果：</p>
+<h2 id="biomedlm">BioMedLM</h2>
+<p>时间：2024</p>
+<p>网络结构: 同GPT2</p>
+<p>预训练数据：PubMed摘要和全文</p>
+<p>预训练：使用新词表。</p>
+<p>下游任务微调：问答</p>
+<p>结果：</p>
+<h2 id="meditron">MEDITRON</h2>
+<p>时间：2023</p>
+<p>网络结构: 同Llama2</p>
+<p>预训练数据：PubMed摘要和全文</p>
+<p>预训练：使用新词表。</p>
+<p>下游任务微调：问答</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2025/01/07/Models-in-general-domain/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#biobert"><span class="toc-text">BioBERT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#clinicalbert--alsentzer"><span class="toc-text">ClinicalBERT- Alsentzer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#clinicalbert-huang"><span class="toc-text">ClinicalBERT – Huang</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#scibert"><span class="toc-text">SciBERT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bluebert"><span class="toc-text">BlueBERT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#g-bert"><span class="toc-text">G-BERT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#behrt"><span class="toc-text">BEHRT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#biomed-roberta"><span class="toc-text">BioMed-RoBERTa</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pubmedbert"><span class="toc-text">PubMedBERT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#biomegatron"><span class="toc-text">BioMegatron</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bio-lm"><span class="toc-text">bio-lm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#diseasebert"><span class="toc-text">diseaseBERT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#med-bert"><span class="toc-text">Med-BERT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#electramed"><span class="toc-text">ELECTRAMed</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#kebiolm"><span class="toc-text">KeBioLM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#biolinkbert"><span class="toc-text">BioLinkBERT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gatortron"><span class="toc-text">GatorTron</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dragon"><span class="toc-text">DRAGON</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#medgpt"><span class="toc-text">MedGPT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#biogpt"><span class="toc-text">BioGPT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gatortrongpt"><span class="toc-text">GatorTronGPT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#med-palm"><span class="toc-text">Med-PaLM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#biomedgpt"><span class="toc-text">BiomedGPT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#biomedlm"><span class="toc-text">BioMedLM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#meditron"><span class="toc-text">MEDITRON</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/marswen">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:dongwen930910@gmail.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+        <li>
+          
+              <a title="rss" href="/atom.xml">
+                <i class="iconfont icon-rss"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/marswen">Copyright © 2025 marswen</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Models%20in%20biomedical%20domain + '&url=' + http%3A%2F%2Fexample.com%2F2025%2F01%2F07%2FModels-in-biomedical-domain%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2025/01/07/Models-in-biomedical-domain/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
