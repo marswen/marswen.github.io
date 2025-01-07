@@ -392,11 +392,9 @@
 <p>$$<br>Attention(Q,K,V)&#x3D;softmax(\frac{QK^\top}{\sqrt{d_k}})V<br>$$</p>
 </li>
 <li><p>Multi-Head Attention:</p>
-<p>$$<br>MultiHead(Q,K,V)&#x3D;Concat(head1,…,head_n)W^o</p>
+<p>$$<br>MultiHead(Q,K,V)&#x3D;Concat(head1,…,head_n)W^o<br>$$</p>
+<p>$$<br>head_i&#x3D;Attention(QW^Q_i,KW^Q_i,VW^V_i)<br>$$</p>
 </li>
-</ul>
-<p>$$$$<br>head_i&#x3D;Attention(QW^Q_i,KW^Q_i,VW^V_i)<br>  $$</p>
-<ul>
 <li><p>Position-wise Feed-Forward Networks:</p>
 <p>$$<br>FFN(x)&#x3D;max(0,xW1+b1)W2+b2<br>$$</p>
 </li>
@@ -405,19 +403,18 @@
 <li><p>时间：2019</p>
 </li>
 <li><p>两个长度为L的连续segment分别为$\mathbf{s}<em>\tau&#x3D;[x</em>{\tau,1},…,x_{\tau,L}]$和$\mathbf{s}<em>{\tau+1}&#x3D;[x</em>{\tau+1,1},…,x_{\tau+1,L}]$ (右移一位)，$\mathbf{s}<em>\tau$算出的第n个隐藏层为$\mathbf{h}^n_\tau$，则$\mathbf{s}</em>{\tau+1}$的第n个隐藏层为：</p>
-<p>$$<br>\tilde{\mathbf{h}}^{n−1}_{\tau+1}&#x3D;[SG(\mathbf{h}^{n-1}<em>\tau), \mathbf{h}^{n-1}</em>{\tau+1}]</p>
+<p>$$<br>\tilde{\mathbf{h}}^{n−1}_{\tau+1}&#x3D;[SG(\mathbf{h}^{n-1}<em>\tau), \mathbf{h}^{n-1}</em>{\tau+1}]<br>$$</p>
+<p>$$<br>\mathbf{q}^n_{\tau+1},\mathbf{k}^n_{\tau+1},\mathbf{v}^n_{\tau+1}&#x3D;\mathbf{h}^{n-1}<em>{\tau+1}\mathbf{W}^\top_q,\tilde{\mathbf{h}}^{n-1}</em>{\tau+1}\mathbf{W}^\top_k,\tilde{\mathbf{h}}^{n-1}_{\tau+1}\mathbf{W}^\top_v<br>$$</p>
+<p>$$<br>\mathbf{h}^n_{\tau+1}&#x3D;TransformerLayer(\mathbf{q}^n_{\tau+1},\mathbf{k}^n_{\tau+1},\mathbf{v}^n_{\tau+1})<br>$$</p>
+<p>SG代表stop-gradient，冻结前一个segment的hidden state，不更新状态及梯度。</p>
 </li>
-</ul>
-<p>$$$$<br>\mathbf{q}^n_{\tau+1},\mathbf{k}^n_{\tau+1},\mathbf{v}^n_{\tau+1}&#x3D;\mathbf{h}^{n-1}<em>{\tau+1}\mathbf{W}^\top_q,\tilde{\mathbf{h}}^{n-1}</em>{\tau+1}\mathbf{W}^\top_k,\tilde{\mathbf{h}}^{n-1}<em>{\tau+1}\mathbf{W}^\top_v<br>$$$$<br>\mathbf{h}^n</em>{\tau+1}&#x3D;TransformerLayer(\mathbf{q}^n_{\tau+1},\mathbf{k}^n_{\tau+1},\mathbf{v}^n_{\tau+1})<br>  $$</p>
-<p>  SG代表stop-gradient，冻结前一个segment的hidden state，不更新状态及梯度。</p>
-<ul>
 <li><p>相对位置编码：展开原始绝对位置编码注意力公式：</p>
-<p>$$<br>\mathbf{A}^{abs}_{i,j}&#x3D;(\mathbf{W}<em>q(\mathbf{E}</em>{x_i}+\mathbf{U}_i))^\top(\mathbf{W}<em>k(\mathbf{E}</em>{x_j}+\mathbf{U}_j))</p>
+<p>$$<br>\mathbf{A}^{abs}_{i,j}&#x3D;(\mathbf{W}<em>q(\mathbf{E}</em>{x_i}+\mathbf{U}_i))^\top(\mathbf{W}<em>k(\mathbf{E}</em>{x_j}+\mathbf{U}_j))<br>$$</p>
+<p>$$<br>&#x3D;\mathbf{E}_{x_i}^\top\mathbf{W}<em>q^\top\mathbf{W}<em>k\mathbf{E}</em>{x_j}+\mathbf{E}</em>{x_i}^\top\mathbf{W}_q^\top\mathbf{W}_k\mathbf{U}_j+\mathbf{U}_i^\top\mathbf{W}_q^\top\mathbf{W}<em>k\mathbf{E}</em>{x_j}+\mathbf{U}_i^\top\mathbf{W}_q^\top\mathbf{W}_k\mathbf{U}_j<br>$$</p>
+<p>把绝对位置参数替换为相对位置参数，用可训练参数替换$\mathbf{W_qU}$</p>
+<p>$$<br>\mathbf{A}^{rel}<em>{i,j}&#x3D;\mathbf{E}</em>{x_i}^\top\mathbf{W}<em>q^\top\mathbf{W}</em>{k,E}\mathbf{E}<em>{x_j}+\mathbf{E}</em>{x_i}^\top\mathbf{W}<em>q^\top\mathbf{W}</em>{k,R}\mathbf{R}<em>{i-j}+u^\top\mathbf{W}</em>{k,E}\mathbf{E}<em>{x_j}+v^\top\mathbf{W}</em>{k,R}\mathbf{R}_{i-j}<br>$$</p>
 </li>
 </ul>
-<p>$$$$<br>&#x3D;\mathbf{E}_{x_i}^\top\mathbf{W}<em>q^\top\mathbf{W}<em>k\mathbf{E}</em>{x_j}+\mathbf{E}</em>{x_i}^\top\mathbf{W}_q^\top\mathbf{W}_k\mathbf{U}_j+\mathbf{U}_i^\top\mathbf{W}_q^\top\mathbf{W}<em>k\mathbf{E}</em>{x_j}+\mathbf{U}_i^\top\mathbf{W}_q^\top\mathbf{W}_k\mathbf{U}_j<br>  $$</p>
-<p>  把绝对位置参数替换为相对位置参数，用可训练参数替换$\mathbf{W_qU}$</p>
-<p>  $$<br>  \mathbf{A}^{rel}<em>{i,j}&#x3D;\mathbf{E}</em>{x_i}^\top\mathbf{W}<em>q^\top\mathbf{W}</em>{k,E}\mathbf{E}<em>{x_j}+\mathbf{E}</em>{x_i}^\top\mathbf{W}<em>q^\top\mathbf{W}</em>{k,R}\mathbf{R}<em>{i-j}+u^\top\mathbf{W}</em>{k,E}\mathbf{E}<em>{x_j}+v^\top\mathbf{W}</em>{k,R}\mathbf{R}_{i-j}<br>  $$</p>
 <h2 id="BERT"><a href="#BERT" class="headerlink" title="BERT"></a>BERT</h2><ul>
 <li><p>时间：2018</p>
 </li>
