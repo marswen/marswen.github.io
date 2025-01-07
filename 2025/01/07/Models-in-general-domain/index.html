@@ -402,7 +402,7 @@
 <h2 id="Transformer-XL"><a href="#Transformer-XL" class="headerlink" title="Transformer-XL"></a>Transformer-XL</h2><ul>
 <li><p>时间：2019</p>
 </li>
-<li><p>两个长度为L的连续segment分别为 $\mathbf{s}<em>\tau&#x3D;[x</em>{\tau,1},…,x_{\tau,L}]$ 和 $\mathbf{s}<em>{\tau+1}&#x3D;[x</em>{\tau+1,1},…,x_{\tau+1,L}]$ (右移一位)，$\mathbf{s}<em>\tau$算出的第n个隐藏层为$\mathbf{h}^n_\tau$，则$\mathbf{s}</em>{\tau+1}$的第n个隐藏层为：</p>
+<li><p>两个长度为L的连续segment分别为 $$\mathbf{s}<em>\tau&#x3D;[x</em>{\tau,1},…,x_{\tau,L}]$$ 和 $$\mathbf{s}<em>{\tau+1}&#x3D;[x</em>{\tau+1,1},…,x_{\tau+1,L}]$$ (右移一位)，$\mathbf{s}<em>\tau$算出的第n个隐藏层为$\mathbf{h}^n_\tau$，则$\mathbf{s}</em>{\tau+1}$的第n个隐藏层为：</p>
 <p>$$<br>\tilde{\mathbf{h}}^{n−1}_{\tau+1}&#x3D;[SG(\mathbf{h}^{n-1}<em>\tau), \mathbf{h}^{n-1}</em>{\tau+1}]<br>$$</p>
 <p>$$<br>\mathbf{q}^n_{\tau+1},\mathbf{k}^n_{\tau+1},\mathbf{v}^n_{\tau+1}&#x3D;\mathbf{h}^{n-1}<em>{\tau+1}\mathbf{W}^\top_q,\tilde{\mathbf{h}}^{n-1}</em>{\tau+1}\mathbf{W}^\top_k,\tilde{\mathbf{h}}^{n-1}_{\tau+1}\mathbf{W}^\top_v<br>$$</p>
 <p>$$<br>\mathbf{h}^n_{\tau+1}&#x3D;TransformerLayer(\mathbf{q}^n_{\tau+1},\mathbf{k}^n_{\tau+1},\mathbf{v}^n_{\tau+1})<br>$$</p>
