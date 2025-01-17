@@ -373,14 +373,31 @@
                   </a>
 
                   <!-- 二维码按钮 -->
-                  <button class="qr-button" data-url="/projects/instment-1.0.2.apk">
+                  <button class="qr-button">
                     <i class="iconfont icon-qrcode"></i> <!-- 二维码图标 -->
                   </button>
 
                   <!-- 显示二维码 -->
+
                   <div class="qr-code">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?data=/projects/instment-1.0.2.apk&size=150x150" alt="二维码">
+                    <!-- 这里先使用一个占位符 -->
+                    <img id="qrCode" src="" alt="二维码">
                   </div>
+
+                  <script>
+                    // 获取当前页面的基础 URL
+                    var baseUrl = window.location.origin;
+
+                    // 获取相对路径（通过 EJS 渲染的 project.downloadLink）
+                    var downloadLink = "/projects/instment-1.0.2.apk";
+
+                    // 拼接成完整的二维码 URL
+                    var qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?data=" + encodeURIComponent(baseUrl + downloadLink) + "&size=150x150";
+
+                    // 设置二维码图片的 src 属性
+                    document.getElementById('qrCode').src = qrCodeUrl;
+                  </script>
+
                 </div>
               
             </p>
