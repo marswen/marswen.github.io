@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2025-01-17T14:54:01.840Z</updated>
+  <updated>2025-01-17T14:59:18.486Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="http://example.com/2025/01/17/%E3%80%8E%E5%90%83%E4%BA%86%E7%82%B9%E5%95%A5%E3%80%8F/"/>
     <id>http://example.com/2025/01/17/%E3%80%8E%E5%90%83%E4%BA%86%E7%82%B9%E5%95%A5%E3%80%8F/</id>
     <published>2025-01-17T13:33:00.000Z</published>
-    <updated>2025-01-17T14:54:01.840Z</updated>
+    <updated>2025-01-17T14:59:18.486Z</updated>
     
-    <content type="html"><![CDATA[<p>『吃了点啥』是一个微信小程序。在这个小程序里，用户输入一日三餐，就可以得到主要营养物质的量化结果，还可以对照不同身体状况下的最少摄入需要量，从而得知饮食健康与否。</p><p><strong>主要功能</strong></p><ul><li>可输入食物名称、数量、单位，自动转换到标准食物量。<br /></li><li>汇总多条食物记录的总营养值。<br /></li><li>输入不同身体条件，获得最少摄入需要量。<br /></li><li>对比评估饮食健康情况。</li></ul><p>您可以微信扫描以下二维码体验小程序。</p><p>&lt;img src="/images/chilediansha-logo.png" width=300 height=300)</p>]]></content>
+    <content type="html"><![CDATA[<p>『吃了点啥』是一个微信小程序。在这个小程序里，用户输入一日三餐，就可以得到主要营养物质的量化结果，还可以对照不同身体状况下的最少摄入需要量，从而得知饮食健康与否。</p><p><strong>主要功能</strong></p><ul><li>可输入食物名称、数量、单位，自动转换到标准食物量。<br /></li><li>汇总多条食物记录的总营养值。<br /></li><li>输入不同身体条件，获得最少摄入需要量。<br /></li><li>对比评估饮食健康情况。</li></ul><p>您可以微信扫描以下二维码体验小程序。</p><p><img src="/images/chilediansha-logo.png" width=300 height=300 /></p>]]></content>
     
     
     <summary type="html">从一日三餐看到营养分布，让您吃得更有数。</summary>
@@ -33,6 +33,8 @@
     <category term="project" scheme="http://example.com/categories/project/"/>
     
     
+    <category term="产品" scheme="http://example.com/tags/%E4%BA%A7%E5%93%81/"/>
+    
   </entry>
   
   <entry>
@@ -40,7 +42,7 @@
     <link href="http://example.com/2025/01/17/%E3%80%8E%E6%AD%A4%E6%97%B6%E5%BD%BC%E5%88%BB%E3%80%8F/"/>
     <id>http://example.com/2025/01/17/%E3%80%8E%E6%AD%A4%E6%97%B6%E5%BD%BC%E5%88%BB%E3%80%8F/</id>
     <published>2025-01-17T09:45:12.000Z</published>
-    <updated>2025-01-17T13:42:58.413Z</updated>
+    <updated>2025-01-17T14:59:28.716Z</updated>
     
     <content type="html"><![CDATA[<p>『此时彼刻』是一款记事类App，目前还只有安卓版本。</p><p>此时彼刻的用意是让用户可以通过这个App在当下记住值得纪念的生活内容，并且可以在任何时候准确找到过去时刻的细节回忆。此时彼刻的日内记忆模型分为日子、活动、小记录三个层级，重要的日期可以在日子里标注，存在持续时间的内容可以在活动里记录，每个活动里可以包含不同类别的具体小记录，小记录也可以不与活动关联离散存在。从长期时间的视角，在特定时间节点会对记录内容从多个视角做描述性统计，展现高光时刻，同时也有多种可视化手段查看、查询、概览记录内容。</p><p><strong>主要功能</strong></p><ul><li>标记重要日期，可选是否特殊标记。<br /></li><li>添加活动，可添加多个同伴，可添加关联小记录。<br /></li><li>小记录附加类别，可添加多个同伴和照片。<br /></li><li>支持各种记录事后编辑和关联。<br /></li><li>日历可视化符号标注。<br /></li><li>跳转特定日期。<br /></li><li>根据小记录类别、内容和同伴筛选。<br /></li><li>总览所有记录。<br /></li><li>总结回顾记录内容。<br /></li><li>导出、重置数据。<br /></li><li>配置记录类别。<br /></li><li>支持简体中文、繁体中文、英文。</li></ul><p>您可以去<ahref="https://www.wandoujia.com/apps/8431708">豌豆荚</a>下载体验，也可以直接在<ahref="/projects/instment-1.0.2.apk">这里</a>下载。</p>]]></content>
     
@@ -51,6 +53,8 @@
     
     <category term="project" scheme="http://example.com/categories/project/"/>
     
+    
+    <category term="产品" scheme="http://example.com/tags/%E4%BA%A7%E5%93%81/"/>
     
   </entry>
   
