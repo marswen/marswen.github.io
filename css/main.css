@@ -1849,9 +1849,7 @@ a:hover {
   left: 30%;
   display: none; /* 默认隐藏二维码 */
   z-index: 10;
-  border: 1px solid;
   padding: 6px;
-  border-radius: 10px;
 }
 
 /* 鼠标悬停在二维码按钮时，显示二维码 */
