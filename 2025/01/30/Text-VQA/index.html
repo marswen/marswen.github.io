@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="zh" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="Dong Wen" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Text-VQA 
+      
+      
+      |
+    
+     Dong Wen&#39;s blog
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4803714_znkx49050if.css">
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Dong Wen's blog" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Dong Wen</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/projects/">
+          <a href="/projects/">Projects</a>
+        </li>
+      
+
+      <li class="nav-item">
+          
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+      </li>
+
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Text-VQA</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2025-01-30
+        </span>
+        
+      </div>
+
+      <div class="post-count">
+          <span class="post-wordcount">
+            Estimated Reading Time: 54 mins.
+          </span>
+      </div>
+
+      <div class="markdown-body">
+        <h2 id="datasets">Datasets</h2>
+<ul>
+<li><strong>VisualMRC</strong> dataset (AAAI 2021) [<a
+target="_blank" rel="noopener" href="https://github.com/nttmdlab-nlp/VisualMRC">Project</a>][<a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/2101.11272">Paper</a>]
+<ul>
+<li>EN.
+要发邮件索取。包括图片、OCR文本框信息、问题、答案及对应文本框。数据量统计在github主页上有。</li>
+</ul></li>
+<li><strong>EST-VQA</strong> dataset (CVPR 2020) [<a
+target="_blank" rel="noopener" href="http://est-vqa.org/">Project</a>][<a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/2002.10215">Paper</a>]
+<ul>
+<li>EN+ZH. 包括图片、问题、答案和文本框信息。</li>
+</ul></li>
+<li><strong>DOC-VQA</strong> dataset (CVPR Workshop 2020) [<a
+target="_blank" rel="noopener" href="https://rrc.cvc.uab.es/?ch=17">Project</a>][<a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/2007.00398">Paper</a>]
+<ul>
+<li>EN. 要注册后下载。包括图片、问题和答案。</li>
+</ul></li>
+<li><strong>Text-VQA</strong> dataset (CVPR 2019) [<a
+target="_blank" rel="noopener" href="https://textvqa.org/dataset">Project</a>][<a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/1904.08920">Paper</a>]
+<ul>
+<li>EN. 包括图片、问题、答案和OCR文本框信息。</li>
+</ul></li>
+<li><strong>ST-VQA</strong> dataset (ICCV 2019) [<a
+target="_blank" rel="noopener" href="https://rrc.cvc.uab.es/?ch=11">Project</a>][<a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/1905.13648">Paper</a>]
+<ul>
+<li>EN. 要注册后下载。包括图片、问题和答案。</li>
+</ul></li>
+<li><strong>OCR-VQA</strong> dataset (ICDAR 2019) [<a
+target="_blank" rel="noopener" href="https://ocr-vqa.github.io/">Project</a>][<a
+target="_blank" rel="noopener" href="https://anandmishra22.github.io/files/mishra-OCR-VQA.pdf">Paper</a>]
+<ul>
+<li>EN. 包括图片、问题、答案和一些文档信息。</li>
+</ul></li>
+</ul>
+<table>
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 34%" />
+<col style="width: 8%" />
+</colgroup>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>#Train+Val Img</th>
+<th>#Train+Val Que</th>
+<th>#Test Img</th>
+<th>#Test Que</th>
+<th>Image Source</th>
+<th>Language</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Text-VQA</td>
+<td>25,119</td>
+<td>39,602</td>
+<td>3,353</td>
+<td>5,734</td>
+<td>[1]</td>
+<td>EN</td>
+</tr>
+<tr>
+<td>ST-VQA</td>
+<td>19,027</td>
+<td>26,308</td>
+<td>2,993</td>
+<td>4,163</td>
+<td>[2, 3, 4, 5, 6, 7, 8]</td>
+<td>EN</td>
+</tr>
+<tr>
+<td>OCR-VQA</td>
+<td>186,775</td>
+<td>901,717</td>
+<td>20,797</td>
+<td>100,429</td>
+<td>[9]</td>
+<td>EN</td>
+</tr>
+<tr>
+<td>EST-VQA</td>
+<td>17,047</td>
+<td>19,362</td>
+<td>4,000</td>
+<td>4,525</td>
+<td>[4, 5, 8, 10, 11, 12, 13]</td>
+<td>EN+CH</td>
+</tr>
+<tr>
+<td>DOC-VQA</td>
+<td>11,480</td>
+<td>44,812</td>
+<td>1,287</td>
+<td>5,188</td>
+<td>[14]</td>
+<td>EN</td>
+</tr>
+<tr>
+<td>VisualMRC</td>
+<td>7,960</td>
+<td>23,854</td>
+<td>2,237</td>
+<td>6,708</td>
+<td>self-collected webpage screenshot</td>
+<td>EN</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Image Source</strong>:[1] OpenImages: A public dataset for
+large-scale multi-label and multi-class image classification (v3) [<a
+target="_blank" rel="noopener" href="https://storage.googleapis.com/openimages/web/download.html">dataset</a>][2]
+Imagenet: A large-scale hierarchical image database [<a
+target="_blank" rel="noopener" href="http://www.image-net.org/">dataset</a>][3] Vizwiz grand challenge:
+Answering visual questions from blind people [<a
+target="_blank" rel="noopener" href="https://vizwiz.org/">dataset</a>][4] ICDAR 2013 robust reading
+competition [<a
+target="_blank" rel="noopener" href="http://dagdata.cvc.uab.es/icdar2013competition/">dataset</a>][5]
+ICDAR 2015 competition on robust reading [<a
+target="_blank" rel="noopener" href="https://github.com/xinke-wang/Awesome-Text-VQA/blob/master">dataset</a>][6]
+Visual Genome: Connecting language and vision using crowdsourced dense
+image annotations [<a target="_blank" rel="noopener" href="https://visualgenome.org/">dataset</a>][7]
+Image retrieval using textual cues [<a
+target="_blank" rel="noopener" href="https://cvit.iiit.ac.in/research/projects/cvit-projects/image-retrieval-using-textual-cues">dataset</a>][8]
+Coco-text: Dataset and benchmark for text detection and recognition in
+natural images [<a
+target="_blank" rel="noopener" href="https://vision.cornell.edu/se3/coco-text-2/">dataset</a>][9]
+Judging a book by its cover [<a
+target="_blank" rel="noopener" href="https://github.com/uchidalab/book-dataset">dataset</a>][10] Total
+Text [<a
+target="_blank" rel="noopener" href="https://github.com/cs-chan/Total-Text-Dataset">dataset</a>][11]
+SCUT-CTW1500 [<a
+target="_blank" rel="noopener" href="https://github.com/Yuliang-Liu/Curve-Text-Detector">dataset</a>][12]
+MLT [<a target="_blank" rel="noopener" href="https://rrc.cvc.uab.es/?ch=8">dataset</a>][13] Chinese
+Street View Text [<a
+target="_blank" rel="noopener" href="https://rrc.cvc.uab.es/?ch=16">dataset</a>][14] UCSF Industry
+Document Library [<a
+target="_blank" rel="noopener" href="https://www.industrydocuments.ucsf.edu/">dataset</a>]</p>
+<h2 id="papers">Papers</h2>
+<h3 id="section">2021</h3>
+<ul>
+<li><strong>[VisualMRC]</strong> VisualMRC: Machine Reading
+Comprehension on Document Images (<strong>AAAI</strong>) [<a
+target="_blank" rel="noopener" href="https://arxiv.org/pdf/2101.11272.pdf">Paper</a>][<a
+target="_blank" rel="noopener" href="https://github.com/nttmdlab-nlp/VisualMRC">Project</a>]</li>
+<li><strong>[SSBaseline]</strong> Simple is not Easy: A Simple Strong
+Baseline for TextVQA and TextCaps (<strong>AAAI</strong>) [<a
+target="_blank" rel="noopener" href="https://arxiv.org/pdf/2012.05153.pdf">Paper</a>][<a
+target="_blank" rel="noopener" href="https://github.com/ZephyrZhuQi/ssbaseline">code</a>]</li>
+</ul>
+<h3 id="section-1">2020</h3>
+<ul>
+<li><strong>[SA-M4C]</strong> Spatially Aware MultimodalTransformers for
+TextVQA (<strong>ECCV</strong>) [<a
+target="_blank" rel="noopener" href="https://arxiv.org/pdf/2007.12146.pdf">Paper</a>][<a
+target="_blank" rel="noopener" href="https://yashkant.github.io/projects/sam-textvqa">Project</a>][<a
+target="_blank" rel="noopener" href="https://github.com/yashkant/sam-textvqa">Code</a>]</li>
+<li><strong>[EST-VQA]</strong> On the General Value of Evidence, and
+Bilingual Scene-Text Visual Question Answering (<strong>CVPR</strong>)
+[<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2002.10215">Paper</a>]</li>
+<li><strong>[M4C]</strong> Iterative Answer Prediction with
+Pointer-Augmented Multimodal Transformers for TextVQA
+(<strong>CVPR</strong>) [<a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/1911.06258">Paper</a>][<a
+target="_blank" rel="noopener" href="https://ronghanghu.com/m4c/">Project</a>]</li>
+<li><strong>[LaAP-Net]</strong> Finding the Evidence: Localization-aware
+Answer Prediction for TextVisual Question Answering
+(<strong>COLING</strong>) [<a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/2010.02582">Paper</a>]</li>
+<li><strong>[CRN]</strong> Cascade Reasoning Network for
+Text-basedVisual Question Answering (<strong>ACM MM</strong>) [<a
+target="_blank" rel="noopener" href="https://dl.acm.org/doi/abs/10.1145/3394171.3413924">Paper</a>][<a
+target="_blank" rel="noopener" href="https://github.com/guanghuixu/CRN_tvqa">Project</a>]</li>
+</ul>
+<h3 id="section-2">2019</h3>
+<ul>
+<li><strong>[Text-VQA/LoRRA]</strong> Towards VQA Models That Can Read
+(<strong>CVPR</strong>) [<a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/1904.08920">Paper</a>][<a
+target="_blank" rel="noopener" href="https://github.com/facebookresearch/pythia">Code</a>]</li>
+<li><strong><a href="#st-vqa">ST-VQA</a></strong> Scene Text Visual
+Question Answering (<strong>ICCV</strong>) [<a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/1905.13648">Paper</a>]</li>
+<li><strong>[Text-KVQA]</strong> From Strings to Things:
+Knowledge-enabled VQA Modelthat can Read and Reason
+(<strong>ICCV</strong>) [<a
+target="_blank" rel="noopener" href="http://openaccess.thecvf.com/content_ICCV_2019/papers/Singh_From_Strings_to_Things_Knowledge-Enabled_VQA_Model_That_Can_Read_ICCV_2019_paper.pdf">Paper</a>]</li>
+<li><strong><a href="#ocr-vqa">OCR-VQA</a></strong> OCR-VQA: Visual
+Question Answering by Reading Text in Images (<strong>ICDAR</strong>)
+[<a
+target="_blank" rel="noopener" href="https://anandmishra22.github.io/files/mishra-OCR-VQA.pdf">Paper</a>]</li>
+</ul>
+<h3 id="technical-reports">Technical Reports</h3>
+<ul>
+<li><strong>[TAP]</strong> TAP: Text-Aware Pre-training for Text-VQA and
+Text-Caption [<a
+target="_blank" rel="noopener" href="https://arxiv.org/abs/2012.04638">Report</a>]</li>
+<li><strong>[RUArt]</strong> RUArt: A Novel Text-Centered Solution for
+Text-Based Visual Question Answering [<a
+target="_blank" rel="noopener" href="https://arxiv.org/pdf/2010.12917.pdf">Report</a>]</li>
+<li><strong>[SMA]</strong> Structured Multimodal Attentions for TextVQA
+[<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2006.00753.pdf">Report</a>][<a
+target="_blank" rel="noopener" href="https://drive.google.com/file/d/1tJ9yK6U6fNkMAV-vLzWPzihaKB80KnsH/view">Slides</a>][<a
+target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=61abzUHhmfw&amp;feature=youtu.be">Video</a>]</li>
+<li><strong>[DiagNet]</strong> DiagNet: Bridging Text and Image [<a
+target="_blank" rel="noopener" href="http://www-personal.umich.edu/~syqian/2019/diagnet/diagnet.pdf">Report</a>][<a
+target="_blank" rel="noopener" href="https://github.com/w-yi/DiagNet">Code</a>]</li>
+<li><strong>[DCD_ZJU]</strong> Winner of 2019 Text-VQA challenge [<a
+target="_blank" rel="noopener" href="https://drive.google.com/file/d/1EZ8jrLTPLLKfwi0K28zq89tTe3ZZ-X8j/view">Slides</a>]</li>
+<li><strong>[Schwail]</strong> Runner-up of 2019 Text-VQA challenge [<a
+target="_blank" rel="noopener" href="https://drive.google.com/file/d/1xNiEHj6J42F3CFx6fYjS9KDTsYTqAlN0/view">Slides</a>]</li>
+</ul>
+<h2 id="benchmark">Benchmark</h2>
+<p><strong>Acc.</strong> : Accuracy <strong>I. E.</strong> : Image
+Encoder <strong>Q. E.</strong> : Question Encoder <strong>O. E.</strong>
+: OCR Token Encoder <strong>Ensem.</strong> : Ensemble</p>
+<h3 id="text-vqa">Text-VQA</h3>
+<p>[<a
+target="_blank" rel="noopener" href="https://evalai.cloudcv.org/web/challenges/challenge-page/244/leaderboard/810">official
+leaderboard(2019)</a>] [<a
+target="_blank" rel="noopener" href="https://evalai.cloudcv.org/web/challenges/challenge-page/551/leaderboard/1575">official
+leaderboard(2020)</a>]</p>
+<table>
+<colgroup>
+<col style="width: 4%" />
+<col style="width: 32%" />
+<col style="width: 1%" />
+<col style="width: 8%" />
+<col style="width: 1%" />
+<col style="width: 38%" />
+<col style="width: 4%" />
+<col style="width: 4%" />
+<col style="width: 1%" />
+</colgroup>
+<thead>
+<tr>
+<th>Y-C./J.</th>
+<th>Methods</th>
+<th>Acc.</th>
+<th>I. E.</th>
+<th>Q. E.</th>
+<th>OCR</th>
+<th>O. E.</th>
+<th>Output</th>
+<th>Ensem.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2019--CVPR</td>
+<td><a
+target="_blank" rel="noopener" href="https://github.com/xinke-wang/Awesome-Text-VQA/blob/master/README.md#LoRRA">LoRRA</a></td>
+<td>26.64</td>
+<td>Faster R-CNN</td>
+<td>GloVe</td>
+<td><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1910.05085.pdf">Rosetta-ml</a></td>
+<td>FastText</td>
+<td>Classification</td>
+<td>N</td>
+</tr>
+<tr>
+<td>2019--N/A</td>
+<td><a
+target="_blank" rel="noopener" href="https://github.com/xinke-wang/Awesome-Text-VQA/blob/master/README.md#DCD-ZJU">DCD_ZJU</a></td>
+<td>31.44</td>
+<td>Faster R-CNN</td>
+<td>BERT</td>
+<td>Rosetta-ml</td>
+<td>FastText</td>
+<td>Classification</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>2020--CVPR</td>
+<td><a
+target="_blank" rel="noopener" href="https://github.com/xinke-wang/Awesome-Text-VQA/blob/master/README.md#M4C">M4C</a></td>
+<td>40.46</td>
+<td>Faster R-CNN (ResNet-101)</td>
+<td>BERT</td>
+<td>Rosetta-en</td>
+<td>FastText</td>
+<td>Decoder</td>
+<td>N</td>
+</tr>
+<tr>
+<td>2020--Challenge</td>
+<td>Xiangpeng</td>
+<td>40.77</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2020--Challenge</td>
+<td>colab_buaa</td>
+<td>44.73</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2020--Challenge</td>
+<td>CVMLP(SAM)</td>
+<td>44.80</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2020--Challenge</td>
+<td><a
+target="_blank" rel="noopener" href="https://github.com/xinke-wang/Awesome-Text-VQA/blob/master/README.md#SMA">NWPU_Adelaide_Team(SMA)</a></td>
+<td>45.51</td>
+<td>Faster R-CNN</td>
+<td>BERT</td>
+<td><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1912.09629.pdf">BDN</a></td>
+<td>Graph Attention</td>
+<td>Decoder</td>
+<td>N</td>
+</tr>
+<tr>
+<td>2020--ECCV</td>
+<td><a
+target="_blank" rel="noopener" href="https://github.com/xinke-wang/Awesome-Text-VQA/blob/master/README.md#SA-M4C">SA-M4C</a></td>
+<td>44.6*</td>
+<td>Faster R-CNN (ResNext-152)</td>
+<td>BERT</td>
+<td><a target="_blank" rel="noopener" href="https://cloud.google.com/products/ai/">Google-OCR</a></td>
+<td>FastText+PHOC</td>
+<td>Decoder</td>
+<td>N</td>
+</tr>
+<tr>
+<td>2020--arXiv</td>
+<td><a
+target="_blank" rel="noopener" href="https://github.com/xinke-wang/Awesome-Text-VQA/blob/master/README.md#TAP">TAP</a></td>
+<td>53.97*</td>
+<td>Faster R-CNN (ResNext-152)</td>
+<td>BERT</td>
+<td><a
+target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/azure/cognitive-services/computer-vision/concept-recognizing-text">Microsoft-OCR</a></td>
+<td>FastText+PHOC</td>
+<td>Decoder</td>
+<td>N</td>
+</tr>
+</tbody>
+</table>
+<p>* Using external data for training.</p>
+<h3 id="st-vqa">ST-VQA</h3>
+<p>[<a
+target="_blank" rel="noopener" href="https://rrc.cvc.uab.es/?ch=11&amp;com=evaluation&amp;task=1">official
+leaderboard</a>]<strong>T1</strong> : Strongly Contextualised Task
+<strong>T2</strong> : Weakly Contextualised Task <strong>T3</strong> :
+Open Dictionary</p>
+<table>
+<colgroup>
+<col style="width: 4%" />
+<col style="width: 28%" />
+<col style="width: 9%" />
+<col style="width: 8%" />
+<col style="width: 1%" />
+<col style="width: 38%" />
+<col style="width: 4%" />
+<col style="width: 2%" />
+<col style="width: 1%" />
+</colgroup>
+<thead>
+<tr>
+<th>Y-C./J.</th>
+<th>Methods</th>
+<th>Acc. (T1/T2/T3)</th>
+<th>I. E.</th>
+<th>Q. E.</th>
+<th>OCR</th>
+<th>O. E.</th>
+<th>Output</th>
+<th>Ensem.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2020--CVPR</td>
+<td><a
+target="_blank" rel="noopener" href="https://github.com/xinke-wang/Awesome-Text-VQA/blob/master/README.md#M4C">M4C</a></td>
+<td>na/na/0.4621</td>
+<td>Faster R-CNN (ResNet-101)</td>
+<td>BERT</td>
+<td><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1910.05085.pdf">Rosetta-en</a></td>
+<td>FastText</td>
+<td>Decoder</td>
+<td>N</td>
+</tr>
+<tr>
+<td>2020--Challenge</td>
+<td>SMA</td>
+<td><strong>0.5081</strong>/<strong>0.3104</strong>/0.4659</td>
+<td>Faster</td>
+<td>BERT</td>
+<td><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1912.09629.pdf">BDN</a></td>
+<td>Graph Attention</td>
+<td>Decoder</td>
+<td>N</td>
+</tr>
+<tr>
+<td>2020--ECCV</td>
+<td><a
+target="_blank" rel="noopener" href="https://github.com/xinke-wang/Awesome-Text-VQA/blob/master/README.md#SA-M4C">SA-M4C</a></td>
+<td>na/na/<strong>0.5042</strong></td>
+<td>Faster R-CNN (ResNext-152)</td>
+<td>BERT</td>
+<td><a target="_blank" rel="noopener" href="https://cloud.google.com/products/ai/">Google-OCR</a></td>
+<td>FastText+PHOC</td>
+<td>Decoder</td>
+<td>N</td>
+</tr>
+<tr>
+<td>2020--arXiv</td>
+<td><a
+target="_blank" rel="noopener" href="https://github.com/xinke-wang/Awesome-Text-VQA/blob/master/README.md#TAP">TAP</a></td>
+<td>na/na/<strong>0.5967</strong></td>
+<td>Faster R-CNN (ResNext-152)</td>
+<td>BERT</td>
+<td><a
+target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/azure/cognitive-services/computer-vision/concept-recognizing-text">Microsoft-OCR</a></td>
+<td>FastText+PHOC</td>
+<td>Decoder</td>
+<td>N</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ocr-vqa">OCR-VQA</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 5%" />
+<col style="width: 47%" />
+<col style="width: 4%" />
+<col style="width: 7%" />
+<col style="width: 2%" />
+<col style="width: 5%" />
+<col style="width: 4%" />
+<col style="width: 4%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr>
+<th>Y-C./J.</th>
+<th>Methods</th>
+<th>Acc.</th>
+<th>I. E.</th>
+<th>Q. E.</th>
+<th>OCR</th>
+<th>O. E.</th>
+<th>Output</th>
+<th>Ensem.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2020--CVPR</td>
+<td><a
+target="_blank" rel="noopener" href="https://github.com/xinke-wang/Awesome-Text-VQA/blob/master/README.md#M4C">M4C</a></td>
+<td><strong>63.9</strong></td>
+<td>Faster R-CNN</td>
+<td>BERT</td>
+<td>Rosetta-en</td>
+<td>FastText</td>
+<td>Decoder</td>
+<td>N</td>
+</tr>
+</tbody>
+</table>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2025/01/30/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#datasets"><span class="toc-text">Datasets</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#papers"><span class="toc-text">Papers</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#section"><span class="toc-text">2021</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#section-1"><span class="toc-text">2020</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#section-2"><span class="toc-text">2019</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#technical-reports"><span class="toc-text">Technical Reports</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#benchmark"><span class="toc-text">Benchmark</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#text-vqa"><span class="toc-text">Text-VQA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#st-vqa"><span class="toc-text">ST-VQA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ocr-vqa"><span class="toc-text">OCR-VQA</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/marswen">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:dongwen930910@gmail.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+        <li>
+          
+              <a title="rss" href="/atom.xml">
+                <i class="iconfont icon-rss"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+
+  <div class="footer-more">
+    Copyright © 2025 <a target="_blank" rel="noopener" href="https://github.com/marswen">Dong Wen</a>
+  </div>
+  <div class="footer-more">
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Oranges</a> | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>
+  </div>
+
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Text-VQA + '&url=' + http%3A%2F%2Fexample.com%2F2025%2F01%2F30%2FText-VQA%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2025/01/30/Text-VQA/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

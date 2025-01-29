@@ -13,7 +13,7 @@
   
   <title>
     
-      Archives 
+      无监督命名实体识别 
       
       
       |
@@ -303,185 +303,135 @@
 
 
       <div class="flex-container">
-        <!-- 归档页，展示本站所有文章，按照年份降序归类，url形式：https://yoursite/archives/ -->
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
 
-<!-- last: 按年份把文章分组，当前遍历到的年份 -->
-<!-- now: 当前遍历到的文章的发布年份 -->
 
-<div class="container archives">
-  <div class="post-list">
-    
-        <!-- 后续文章的发布年份呈现 -->
-        <div class="content-title">
-          <h2>
-            <span>2025</span>
-          </h2>
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">无监督命名实体识别</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2025-01-30
+        </span>
+        
+      </div>
+
+      <div class="post-count">
+          <span class="post-wordcount">
+            Estimated Reading Time: 6 mins.
+          </span>
+      </div>
+
+      <div class="markdown-body">
+        <p><strong>Unsupervised NER using BERT</strong></p>
+<p><a
+target="_blank" rel="noopener" href="https://towardsdatascience.com/unsupervised-ner-using-bert-2d7af5f90b8a">Paper</a></p>
+<p>第一版，仅仅利用BERT的MLM任务进行NER，首先从bert两万多词表里筛选出有效名词，把他们聚类成实体标签，过程是：对所有词计算和其他所有词的相似度，仅保留大于0.5的词，建立一个图，找最大关联强度的词作为代表词，然后继续这个过程找次一些结果，想要的实体类型映射到聚类结果上。预测时先找到名词词组位置作为预测目标，把预测目标位置的词再映射到目标标签即可。</p>
+<p><strong>SSL could avoid supervised learning</strong></p>
+<p><a
+target="_blank" rel="noopener" href="https://ajitrajasekharan.github.io/2021/01/02/my-first-post.html">Paper</a></p>
+<blockquote>
+<p>这个文章太tm难读了，反复多层次讲全过程，得前后对照看才能搞清楚细节操作</p>
+</blockquote>
+<p>第二版，上一版只考虑了句子结构决定实体类别，这版增加了词形对实体推断的影响（通过形容词副词的标签来判断）。这篇考虑到专业领域的识别，需要选择领域预训练的模型或多个模型ensemble。这篇没有自动聚类词所属标签，通过半自动标注。首先确定目标实体类别，子类用下划线连接表示，尽量保证不同类别标签互斥，然后用上篇同样方法聚类，对于中心词，找出专有名词，人工标注不考虑大小写的所有可能的标签类别。然后基于这些种子词标签给词表里所有词create
+entity
+vector，把每个词周围所有词的标签汇总起来，种子词的标签也得到了增强。再继续增强形容词副词，把专有名词传给
+“** is []"
+这样的prompt，把结果再加进prompt得到新的形容词副词，把原本专有名词的标签加给形容词副词预测结果。再来一次这个过程增强标签。预测时要构建两个句子，一个是利用phrase
+cue的"** is a []"，可以取CLS也可以取目标位置，另一个是利用sentence
+cue的MLM。对预测结果，统计entity
+vector里实体标签个数，用个数和预测词得分加权平均，再通过softmax得到每个实体标签的概率。两个结果的合并取舍是根据具体实体哪个模型更可靠来决定，或者取得分更高的结果。</p>
+<p><strong>An Unsupervised Neural Attention Model for Aspect
+Extraction</strong></p>
+<p>这几篇虽然学习细节都不一样，但总体思想很类似，就是VAE的思路，先从原始数据摘要，再从摘要重建原文，思路很好，解决谜底藏在谜面上的路子。但这个思路对NER感觉不太成立，因为NER结果对原文意思的覆盖范围很有限。</p>
+<p><strong>CycleNER: An unsupervised training approach for named entity
+recognition</strong></p>
+<p>这个文章是参考上面的思路的，其实不是unsupervised，本质上类似于UIE，用生成方法解决NER问题，但又没有解决NER结果重建原文不合理的问题。</p>
+<p><strong>Unsupervised Video Summarization with Adversarial LSTM
+Networks</strong></p>
+<p><strong>Cycle-SUM: Cycle-consistent Adversarial LSTM Networks for
+Unsupervised Video Summarization</strong></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2025/01/30/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2025/01/30/Text-VQA/" target="_self">
+                <span>Next</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
         </div>
       
-      <div class="post-item" title="Text-VQA">
-        <div class="time-m-d">01-30</div>
-        <div class="title">
-          <a href="/2025/01/30/Text-VQA/">
-            <span>Text-VQA</span>
-          </a>
-        </div>
-      </div>
+    </div>
     
-      <div class="post-item" title="无监督命名实体识别">
-        <div class="time-m-d">01-30</div>
-        <div class="title">
-          <a href="/2025/01/30/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB/">
-            <span>无监督命名实体识别</span>
-          </a>
-        </div>
-      </div>
+
     
-      <div class="post-item" title="数据增强">
-        <div class="time-m-d">01-30</div>
-        <div class="title">
-          <a href="/2025/01/30/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/">
-            <span>数据增强</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="细粒度情感分析">
-        <div class="time-m-d">01-29</div>
-        <div class="title">
-          <a href="/2025/01/29/%E7%BB%86%E7%B2%92%E5%BA%A6%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90/">
-            <span>细粒度情感分析</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="词级别文本挖掘">
-        <div class="time-m-d">01-22</div>
-        <div class="title">
-          <a href="/2025/01/22/%E8%AF%8D%E7%BA%A7%E5%88%AB%E6%96%87%E6%9C%AC%E6%8C%96%E6%8E%98/">
-            <span>词级别文本挖掘</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="LeetCode笔记">
-        <div class="time-m-d">01-17</div>
-        <div class="title">
-          <a href="/2025/01/17/LeetCode%E7%AC%94%E8%AE%B0/">
-            <span>LeetCode笔记</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="『吃了点啥』">
-        <div class="time-m-d">01-17</div>
-        <div class="title">
-          <a href="/2025/01/17/%E3%80%8E%E5%90%83%E4%BA%86%E7%82%B9%E5%95%A5%E3%80%8F/">
-            <span>『吃了点啥』</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="『此时彼刻』">
-        <div class="time-m-d">01-17</div>
-        <div class="title">
-          <a href="/2025/01/17/%E3%80%8E%E6%AD%A4%E6%97%B6%E5%BD%BC%E5%88%BB%E3%80%8F/">
-            <span>『此时彼刻』</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="App开发初体验">
-        <div class="time-m-d">01-16</div>
-        <div class="title">
-          <a href="/2025/01/16/App%E5%BC%80%E5%8F%91%E5%88%9D%E4%BD%93%E9%AA%8C/">
-            <span>App开发初体验</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Clinical data governance">
-        <div class="time-m-d">01-07</div>
-        <div class="title">
-          <a href="/2025/01/07/Clinical-data-governance/">
-            <span>Clinical data governance</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Train of thought for research">
-        <div class="time-m-d">01-07</div>
-        <div class="title">
-          <a href="/2025/01/07/Train-of-thought-for-research/">
-            <span>Train of thought for research</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Cases of clinical decision support system">
-        <div class="time-m-d">01-07</div>
-        <div class="title">
-          <a href="/2025/01/07/Cases-of-clinical-decision-support-system/">
-            <span>Cases of clinical decision support system</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Methods for information extraction">
-        <div class="time-m-d">01-07</div>
-        <div class="title">
-          <a href="/2025/01/07/Methods-for-information-extraction/">
-            <span>Methods for information extraction</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Popular tools for medical NLP">
-        <div class="time-m-d">01-07</div>
-        <div class="title">
-          <a href="/2025/01/07/Popular-tools-for-medical-NLP/">
-            <span>Popular tools for medical NLP</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Models in biomedical domain">
-        <div class="time-m-d">01-07</div>
-        <div class="title">
-          <a href="/2025/01/07/Models-in-biomedical-domain/">
-            <span>Models in biomedical domain</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Models in general domain">
-        <div class="time-m-d">01-07</div>
-        <div class="title">
-          <a href="/2025/01/07/Models-in-general-domain/">
-            <span>Models in general domain</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Tasks from medical NLP benchmarks">
-        <div class="time-m-d">01-07</div>
-        <div class="title">
-          <a href="/2025/01/07/Tasks%20from%20medical%20NLP%20benchmarks/">
-            <span>Tasks from medical NLP benchmarks</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Tasks from medical NLP challenges">
-        <div class="time-m-d">01-07</div>
-        <div class="title">
-          <a href="/2025/01/07/Tasks-from-medical-NLP-challenges/">
-            <span>Tasks from medical NLP challenges</span>
-          </a>
-        </div>
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
       </div>
     
   </div>
-</div>
+
+
 
         <div class="footer">
   <div class="social">
@@ -553,6 +503,24 @@
 
 
         
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E6%97%A0%E7%9B%91%E7%9D%A3%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB + '&url=' + http%3A%2F%2Fexample.com%2F2025%2F01%2F30%2F%25E6%2597%25A0%25E7%259B%2591%25E7%259D%25A3%25E5%2591%25BD%25E5%2590%258D%25E5%25AE%259E%25E4%25BD%2593%25E8%25AF%2586%25E5%2588%25AB%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2025/01/30/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
   
   
 <script src="/js/shares.js"></script>

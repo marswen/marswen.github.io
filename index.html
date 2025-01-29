@@ -304,6 +304,60 @@
     
 
     
+      <div class="post-item" title="Text-VQA">
+        <div class="title">
+          <a href="/2025/01/30/Text-VQA/">
+            
+              
+                <span>Text-VQA</span>
+              
+            
+          </a>
+        </div>
+        <div class="excerpt">
+          Datasets
+
+VisualMRC dataset (AAAI 2021) [Project][Paper]
+        </div>
+        <div class="time-m-d">2025-01-30</div>
+      </div>
+    
+      <div class="post-item" title="无监督命名实体识别">
+        <div class="title">
+          <a href="/2025/01/30/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB/">
+            
+              
+                <span>无监督命名实体识别</span>
+              
+            
+          </a>
+        </div>
+        <div class="excerpt">
+          Unsupervised NER using BERT
+Paper
+第一版，仅仅利用BERT的MLM任务进行NER，首先从bert两万多词表里筛选出有效名词，把他们聚类成实体标签，过程是：对所有词计算和其他所有词的相似度，仅保留大于0.5的词，建立一个图，找最大关联强度的词作为代表词，然后继续这个过程找次一些结果，想要的实体类型映射到聚类结果上。预测时先找到名词词组位置作为预测目标，把预测目标位置的词再映射到目标标签即可。
+        </div>
+        <div class="time-m-d">2025-01-30</div>
+      </div>
+    
+      <div class="post-item" title="数据增强">
+        <div class="title">
+          <a href="/2025/01/30/%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA/">
+            
+              
+                <span>数据增强</span>
+              
+            
+          </a>
+        </div>
+        <div class="excerpt">
+          mixup: Beyond Empirical Risk Minimization
+
+https://arxiv.org/abs/1710.09412
+        </div>
+        <div class="time-m-d">2025-01-30</div>
+      </div>
+    
       <div class="post-item" title="细粒度情感分析">
         <div class="title">
           <a href="/2025/01/29/%E7%BB%86%E7%B2%92%E5%BA%A6%E6%83%85%E6%84%9F%E5%88%86%E6%9E%90/">
@@ -425,60 +479,6 @@ Matrix67新词发现
           数据治理不是个新词，但在HIT行业里却是伴随AI一路火起来的风口概念。临床数据治理是从数据再利用的角度出发的，实际需求是医院一般都会存在多个供应商的系统，不同系统里数据共享是一个老生常谈的问题了，即便能共用数据，不同系统里数据属性也可能有差异甚至冲突，从各个系统里层层找可靠的数据对应用的效率是个潜在的挑战，甚至想要的数据不一定能轻松找得到。所以临床数据治理做的事情是把不同来源的异构数据比较规整地梳理出高质量可用数据，并且能从应用场景的角度出发，从已有的数据中高效采集到需要的数据。在具体的实施层面上，数据治理的存储及服务可以成为现在流行的数据中台，在高效存储高质量数据的基础上，灵活提供各类应用需要的数据服务。下面从临床数据治理业务层面的几个关键问题具体展开。
 Common data
 model通用数据模型是第一个需要考虑的问题，通用数据模型提供了一套数据存储的标准schema及各字段属性具体描述。医学信息学里讲的通用数据模型与计算机讲的数据模型概念是兼容的，通用是强调让各种来源的数据有比较标准的数据定义的方法，方便数据整合和应用扩展。结合医学领域有一些外延的独特考量，比如互操作性（interoperability）和算法应用在多中心数据上的可扩展性（scalability）对HIT软件场景是很重要的，这个是通用数据模型的一个优势，可以保证数据存储的一致性和标准性，尽可能提高应用开发的灵活性和可扩展性；还有医疗数据还是有比较强的领域知识门槛的，对数据来源属性和关联的理解对算法属性开发是比较重要的，在把原始数据转换到通用数据模型的过程中，实质上是已经结合领域知识把繁杂的原始数据的复杂度降低了，给开发者调取数据的逻辑也简化清楚了很多；另外还有有些应用其实能够被数据化的，比如报表、EDC之类的，那么这些不同应用和底层数据存储查询的耦合方式也是个值得思考的问题。目前已经有几个开放的通用数据模型了：
-        </div>
-        <div class="time-m-d">2025-01-07</div>
-      </div>
-    
-      <div class="post-item" title="Train of thought for research">
-        <div class="title">
-          <a href="/2025/01/07/Train-of-thought-for-research/">
-            
-              
-                <span>Train of thought for research</span>
-              
-            
-          </a>
-        </div>
-        <div class="excerpt">
-          医学自然语言处理或临床决策支持相关的文献里提到最早的工作大概在20世纪60年代，JBI在2001年前叫Computers
-and Biomedical
-Research，最早出版时间是1967年，也算互相印证了。字面上就可以看到，医学信息学最初就是承接computer在生物医学领域的工作，所以看以前的论文，五花八门，有很多例如信号处理、基因数据分析、图像重建、认知科学、计算生物学、物理建模等非常理论的研究，后来就慢慢地聚焦informatics了，即关注医疗活动里信息的流动，一些非常具体的技术工作可能就成为生物医学工程的范畴了，因为本身医学不算纯理工科，有很多人文关怀和社会研究的内容，医学信息学也在专职研究群体扩大的情况下逐步明确自己的范围。所以，医学信息学是由所涉及的研究内容确定的，而不是从基础理论演绎分化出来的，从以前到现在都呈现这样的特征，因此某些领域的发展是离散的，并非逐步构建理论体系。医疗信息系统也是逐步发展起来的，并非一开始就画好了完整的蓝图，一开始可能只是基本的图像管理和传输，慢慢地开始增加患者信息管理模块、电子病历模块、电子医嘱模块、决策支持功能等，很多研究内容也伴随其发展而变化。
-        </div>
-        <div class="time-m-d">2025-01-07</div>
-      </div>
-    
-      <div class="post-item" title="Cases of clinical decision support system">
-        <div class="title">
-          <a href="/2025/01/07/Cases-of-clinical-decision-support-system/">
-            
-              
-                <span>Cases of clinical decision support system</span>
-              
-            
-          </a>
-        </div>
-        <div class="excerpt">
-          Brigham and
-Women’s Hospital/Partners HealthCare
-为患者开药时，系统会建议患者特定的剂量和用药频率，另外也会展示药物过敏、药物实验室检查、药物疾病检查、药物妊娠检查、药物相互作用、重复用药、药物成本、针对特定临床情况的可能替代药物等常见功能。例如：地高辛医嘱界面会展示最新的肾功能值、血清钾值和地高辛水平；血液制品医嘱会显示输血限制和上次交叉配血的结果。初始医嘱后会触发后续医嘱建议提醒医生。例如：让患者卧床休息时，检查是否存在肝素医嘱，如果没找到会建议皮下肝素以预防深静脉血栓形成。使用Beers标准对老年用药知识库持续更新。对药物选择、剂量指导、频率建议、后续医嘱、ADE降低、用药错误率降低有积极影响。
-        </div>
-        <div class="time-m-d">2025-01-07</div>
-      </div>
-    
-      <div class="post-item" title="Methods for information extraction">
-        <div class="title">
-          <a href="/2025/01/07/Methods-for-information-extraction/">
-            
-              
-                <span>Methods for information extraction</span>
-              
-            
-          </a>
-        </div>
-        <div class="excerpt">
-          总体思想
-对一个字段开发抽取算法的过程本质是寻找确认相应信息的最低信息熵的路径，通过优化存在依赖关系的各个环节，提升总体表现。
-\[
         </div>
         <div class="time-m-d">2025-01-07</div>
       </div>
