@@ -13,7 +13,7 @@
   
   <title>
     
-      Tag 
+      Qwen技术路线笔记 
       
       
       |
@@ -339,19 +339,158 @@
 
 
   
-  <!-- 分类页 url形式：https://yoursite/categories/ -->
-  <div class="container category-index">
-    <div>
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Medical-Informatics/">Medical Informatics</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/project/">project</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM/">LLM</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%A8%E6%A0%88%E5%BC%80%E5%8F%91/">全栈开发</a><span class="category-list-count">1</span></li></ul>
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Qwen技术路线笔记</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2025-02-15
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark mr-10" title="Categories"></i>
+                
+                <span class="span--category mr-8">
+                  <a href="/categories/LLM/" title="LLM">
+                    <b>#</b> LLM
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%B7%A1%E7%A4%BC/" title="大模型巡礼">
+                    <b>#</b> 大模型巡礼
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+
+      <div class="post-count">
+          <span class="post-wordcount">
+            Estimated Reading Time: 14 mins.
+          </span>
+      </div>
+
+      <div class="markdown-body">
+        <h1 id="qwen">Qwen</h1>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2309.16609">Technical Report</a></p>
+<p>数据：要保证多样化，覆盖广泛类型、领域和任务。多语言，中英文占很大部分。包括公开网络文档、百科、图书、代码等。对公开网络数据，从html里抽取文本，并使用工具判断语言，去重包括标准化后完全匹配去重、MinHash和LSH模糊去重，结合规则和模型过滤低质量内容，使用语言模型、质量评分模型、不当内容识别模型等模型对内容评分，也人工采样数据并确保质量，另外在预训练里加入高质量指令数据，过滤掉评估任务里的指令数据。总计3T
+tokens。</p>
+<p>tokenizer：同GPT3.5和4，使用BPE，利用tiktoken，扩增cl100k，添加常用中文字词以及其他语言，数字拆分成个位数。词表大小152k。相比其他开源的有更高压缩率。</p>
+<p>模型架构：基于LLaMA架构，修改：不绑定输入输出embedding；位置编码用RoPE，逆频率矩阵里用FP32而不是BF16或FP16以提升准确度；多数层里删掉偏置项，但是在QKV里添加偏置项以增强外推能力。使用Pre-Norm和RMSNorm；激活函数使用SwiGLU，FFN维度取<span
+class="math inline">\(8/3*d_{model}\)</span>。</p>
+<p>训练：遵循自回归模型的标准训练方法。上下文长度2k。打乱数据，拼接文档，按上下文长度截断。使用Flash
+Attention。优化器AdamW，<span
+class="math inline">\(\beta_1\)</span>=0.9，<span
+class="math inline">\(\beta_2\)</span>=0.95，<span
+class="math inline">\(\epsilon\)</span> =
+1e-8。使用余弦学习率调度，最低衰减到10%。为保证训练稳定使用BF16混合精度训练。</p>
+<p>上下文长度扩展：使用NTK-aware
+interpolation，与对RoPE各维度均等缩放的位置插值不同，其修改RoPE的base以防止高频信息损失，无需训练。进一步修改以块为单位动态修改缩放避免性能下降。使用两种注意力机制：LogN-Scaling和window
+attention，LogN-Scaling基于上下文长度和训练长度比例缩放q和v的点积，window
+attention把注意力限制在窗口内避免注意过远内容，对较低层使用较短的窗口，对于较高层使用更长的窗口。上下文长度可有效保持在8k。</p>
+<p>SFT：数据：用人类对话风格标注以提升模型的帮助性；排除使用提示模板的数据以提升场景泛化能力；增加安全相关数据；标注数据使用ChatML格式。batch
+size 128，训练4000步，学习率2e-6，热身1430步。</p>
+<p>RLHF：奖励模型训练方法和LLM一样，利用人工标注的样本对数据，先做preference
+model
+pretraining，再微调，使用相同大小的Qwen模型初始化，加入池化层进行分类。构建标注数据集时，利用分类器和平衡采样算法保证多样性。强化学习算法为PPO。</p>
+<p>Code-Qwen：从基础模型开始，在文本和代码数据的组合上预训练，然后继续在代码数据上预训练。</p>
+<p>Qwen-Math：在预训练模型上利用数学语料做SFT。</p>
+<h1 id="qwen2">Qwen2</h1>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2407.10671">Technical Report</a></p>
+<p>数据：在Qwen数据基础上提升质量、扩展数量、改进混合。使用Qwen模型过滤掉低质量数据，利用模型合成高质量数据。增加高质量代码、数学和多语言数据。在缩小的模型上进行实验以优化来自各种来源和领域的数据的混合。总计7T
+tokens，放宽质量限制得到12T，但不能提升性能。</p>
+<p>tokenizer：同Qwen。</p>
+<p>模型架构：用GQA替换MHA。扩展上下文长度：利用Dual Chunk
+Attention和YaRN，从4k增加到32k，RoPE的base
+frequency从10000修改为10000000。同Qwen，使用SwiGLU、RoPE、QKV
+bias、RMSNorm、Pre-Norm。</p>
+<p>MOE设计：采用细粒度的专家，创建较小规模专家，激活更多数量专家。同时使用共享专家和特定专家。专家初始化时，利用dense模型权重，FFN参数沿中间维度进行随机排列，再从中提取专家，丢弃其他维度，每个专家50%的参数会随机重新初始化。</p>
+<p>构建微调数据：包含两步：协同数据标注，自动数据合成。协同数据标注里，协同数据标注使用InsTag从指令数据集里提取本体，通过评估带标签的指令数据的标签多样性、语义丰富性、复杂性和意图完整性等标准，选择一组代表性指令，通过自进化策略向现有指令添加约束或要求，人工标注多个回答的偏好。自动数据合成里，对于具有明确最终答案的数学或类似任务，通过拒绝采样生成推理数据，对于编码任务，利用LLM生成解决方案和测试用例，保留通过测试的数据，利用公开高质量文学作品，利用LLM生成说明，另外编制安全和价值观规范数据集。</p>
+<p>RLHF：包括离线和在线两部分，利用DPO优化，另外采用Online Merging
+Optimizer。</p>
+<h1 id="qwen2.5">Qwen2.5</h1>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2412.15115">Technical Report</a> | <a
+target="_blank" rel="noopener" href="https://github.com/QwenLM/Qwen2.5">Code</a></p>
+<p>模型架构同Qwen2，tokenizer里特殊token增加到22个。</p>
+<p>预训练数据：利用Qwen2‑Instruct过滤低质量数据，增加数学和代码数据，利用Qwen2-72B-Instruct和Qwen2-Math-72B-Instruct合成数学、代码和领域知识数据，并利用奖励模型和Qwen2-Math-RM-72B模型控制合成数据质量，减少低质量的电子商务、社交媒体和娱乐等领域数据，增加技术、科学和学术研究等领域高质量数据。总计18T数据。</p>
+<p>长上下文预训练：两阶段预训练：初始阶段上下文长度4k，然后扩展到32k，使用ABF技术把RoPE
+base
+frequency从10000增加到1000000。对于Qwen2.5‑Turbo在训练中实施渐进式上下文长度扩展策略，分为四个阶段：32768、65536、131072、262144，RoPE
+base
+frequency为10000000，在每个阶段训练数据包含40%当前最大长度序列和60%较短序列。使用YaRN和DCA。</p>
+<p>微调：扩大SFT数据覆盖，超过100万，解决了长序列生成、数学问题、编码、指令遵循、结构化数据理解、逻辑推理、跨语言转换、系统指令等问题。离线强化学习阶段使用SFT模型对数据集生成答案，通过质量检查的作为正样本，没通过的作为DOP负样本。在线强化学习里，利用GRPO优化。</p>
+<h1 id="qwen-vl">Qwen-VL</h1>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2308.12966">Technical Report</a> | <a
+target="_blank" rel="noopener" href="https://github.com/QwenLM/Qwen-VL">Code</a></p>
+<p>模型架构：包括三部分：LLM，视觉编码器，Position-aware Vision-Language
+Adapter。LLM从Qwen‑7B预训练权重初始化。视觉编码器使用Openclip的ViT-bigG预训练权重初始化，将输入图像的大小调整为特定分辨率，视觉编码器将图像分割成步长14的块，生成一组图像特征。VL适配器包括一个随机初始化的单层交叉注意模块，使用一组embedding作为query，使用来自视觉编码器的图像特征作为交叉注意操作的key，将视觉特征序列压缩为固定度256。</p>
+<p>训练：包括两阶段预训练和SFT，第一阶段使用1.4B图像文本对数据，冻结LLM，优化编码器和适配器。第二阶段在图片说明、图像问答、图像分割、OCR、纯文本生成等7个任务上的高质量图文交叉数据上，提高编码器分辨率，训练整个模型。SFT通过指令数据增强指令遵循和对话能力。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2025/01/30/DeepSeek%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF%E7%AC%94%E8%AE%B0/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#qwen"><span class="toc-text">Qwen</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#qwen2"><span class="toc-text">Qwen2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#qwen2.5"><span class="toc-text">Qwen2.5</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#qwen-vl"><span class="toc-text">Qwen-VL</span></a></li></ol>
+      
     </div>
   </div>
-  
 
   
+<script src="/js/catalog.js"></script>
 
-  
 
-  
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
 
 
         <div class="footer">
@@ -431,12 +570,12 @@
       </a>
       <div class="share-content hidden">
         
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + tags + '&url=' + http%3A%2F%2Fexample.com%2Fcategories%2Findex.html + '" target="_blank" title="Twitter">
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Qwen%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF%E7%AC%94%E8%AE%B0 + '&url=' + http%3A%2F%2Fexample.com%2F2025%2F02%2F14%2FQwen%25E6%258A%2580%25E6%259C%25AF%25E8%25B7%25AF%25E7%25BA%25BF%25E7%25AC%2594%25E8%25AE%25B0%2F + '" target="_blank" title="Twitter">
             <i class="iconfont icon-twitter"></i>
           </a>
         
         
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/categories/index.html" target="_blank" title="Facebook">
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2025/02/14/Qwen%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF%E7%AC%94%E8%AE%B0/" target="_blank" title="Facebook">
             <i class="iconfont icon-facebooksquare"></i>
           </a>
         
