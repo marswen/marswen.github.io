@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>LLaMA技术路线笔记</title>
+      <link href="/2025/02/15/LLaMA%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF%E7%AC%94%E8%AE%B0/"/>
+      <url>/2025/02/15/LLaMA%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF%E7%AC%94%E8%AE%B0/</url>
+      
+        <content type="html"><![CDATA[<h1 id="llama">LLAMA</h1><p><a href="https://arxiv.org/abs/2302.13971">Technical Report</a> | <ahref="https://github.com/meta-llama/llama">Code</a></p><p>tokenizer：使用SentencePiece的BPE，把数字拆分成个位数，对未知utf-8字符回退到字节。</p><p>预训练数据：英语CommonCrawl、C4、Github、Wikipedia、Gutenberg和Books3、ArXiv、StackExchange。总计1.4Ttokens。wikipedia和书籍类训练两轮，其他都训练一轮。</p><p>模型架构：使用Pre-Norm和RMSNorm，使用SwiGLU激活函数，隐藏层维度<spanclass="math inline">\(8/3*d_{model}\)</span>，使用RoPE。</p><p>训练：优化器AdamW，<spanclass="math inline">\(\beta_1\)</span>=0.9，<spanclass="math inline">\(\beta_2\)</span>=0.95，余弦学习率调度，最低衰减到10%，权重衰减0.1，梯度裁剪1.0，2000步热身。使用xformers里多头注意力的高效实现，通过存储权重减少计算量大的操作的重复计算，尽可能重叠了计算和通信时间。</p><h1 id="llama2">LLAMA2</h1><p><a href="https://arxiv.org/abs/2307.09288">Technical Report</a></p><p>相比LLaMA1，使用GQA，上下文长度增加到4k，训练token量增加到2Ttokens。</p><p>SFT里包含27540条标注数据，因为发现只需要数万条数据就足以得到高质量结果。</p><p>RLHF：人类偏好数据，要求标注者对两个不同参数模型采样结果标注偏好。由于帮助性和安全性有时会相互制衡，所以为提升奖励模型效果，针对帮助性和安全性训练了两个独立的奖励模型，从SFT模型初始化。利用拒绝采样微调和PPO算法做强化学习。</p><p>为优化多轮对话后记住初始指令，提出GhostAttention：先设定一个系统指令，把系统指令添加到多轮对话的每个用户消息里，使用最新RLHF模型对每个用户消息生成多次采样，用奖励模型选择最好结果，得到合成数据，针对合成数据删除除第一轮外添加的用户指令再去训练sft模型，多轮数据中前面几轮的所有loss设置为0，不参与训练。</p><h1 id="code-llama">Code LLAMA</h1><p><a href="https://arxiv.org/abs/2308.12950">Technical Report</a></p><p>从LLAMA2初始化模型，而不是仅仅预训练代码数据。</p><p>70B模型在1T tokens上训练，其他都在500Btokens上。数据包括去重的公开代码、与代码相关的自然语言、自然语言数据。</p><p>按casualmasking的概念训练代码填充模型，把代码随即拆分为三部分，随机把一半格式化为prefix-suffix-middle，一半suffix-prefix-middle，中间用特殊token间隔，移除了SentencePiece在编码中间和后缀是添加的隐式首空格。</p><p>增加长上下文微调，长度从4k增加到16k，方法类似位置插值，但不是线性缩小旋转位置编码的frequency，而是改变其baseperiod，从10000修改为1000000。</p><p>微调数据集包括三种：为LLAMA2收集的指令微调数据集以保留帮助性和安全性，利用Self-instruct生成问题和测试用例及代码并保留通过测试的数据，预训练代码和自然语言数据集里一部分以避免能力退化。</p><p>训练：优化器AdamW，<spanclass="math inline">\(\beta_1\)</span>=0.9，<spanclass="math inline">\(\beta_2\)</span>=0.95，余弦学习率调度，1000步热身，最终学习率为峰值1/30，学习率同LLAMA2，batchsize 4M tokens。总共训练约5B tokens。微调学习率2e-5，训练10000步。</p><h1 id="llama3">LLAMA3</h1><p><a href="https://arxiv.org/abs/2407.21783">Technical Report</a></p><p>预训练数据：大部分数据从网络获取，去除了敏感数据。从html里解析内容，保留数学和代码内容的结构，保留图片alt内容，markdown相比纯文本是有害的因此移除所有markdown标记。从URL层面去重，利用MinHash从文档层面去重，类似ccNet的方法从行层面去重，移除超过6次的行。开发启发式规则移除其他低质量内容，通过重复的n-gram覆盖率移除重复长行，对脏话计数过滤成人网站，利用token分布KL散度过滤包含过多异常token的文档。使用LLAMA2生成数据，通过DistilRoberta评估内容质量。训练DistilRoberta模型找出编码和推理网页。对多语言数据，通过fasttext分类器分成176种语言，用以上方式控制数据质量。通过分类器对数据领域分类和小模型上数据组合实验，确定最终数据组合里包含50%常识、25%数学推理、17%代码和8%多语言。使用混合数据做训练退火。</p><p>模型架构：相比LLAMA2，使用8头GQA，使用注意力掩码防止同一序列中不同文档之间的自注意力，词表包含来自tikitoken的100ktokens和另外28k非英语token，把RoPE的base frequency修改为500000。</p><p>scaling law：compute budget: <span class="math inline">\(C\)</span>,optimal number of training tokens: <spanclass="math inline">\(N^⋆(C)\)</span></p><p><span class="math display">\[N^⋆(C)=0.29C^{0.53}\]</span></p><p>预训练：包括三个阶段：初始预训练，上下文预训练，退火。初始与训练，峰值学习率8e-5 ，线性热身8000步，经过1200000步余弦学习率衰减至8e-7，初期使用较低的batchsize来提高训练稳定性，随后增加以提高效率。在预训练的最后阶段，对长序列进行训练，以支持128k的上下文窗口。在对最后40Mtokens预训练时，将学习率线性退火至0，保持上下文长度为128ktokens，调整数据组合以对质量极高的数据源进行上采样。</p><p>最后执行SFT和DPO，数据包括人类偏好数据和拒绝采样数据。</p><p>通过添加图像编码器、图像适配器、视频适配器组件可以扩展为多模态模型。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> LLM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 大模型巡礼 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Qwen技术路线笔记</title>
       <link href="/2025/02/14/Qwen%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF%E7%AC%94%E8%AE%B0/"/>
       <url>/2025/02/14/Qwen%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF%E7%AC%94%E8%AE%B0/</url>
