@@ -210,27 +210,6 @@ href=&quot;http://www.matrix67.com/blog/archives/5044&quot;&gt;Matrix67新词发
   </entry>
   
   <entry>
-    <title>LeetCode笔记</title>
-    <link href="http://example.com/2025/01/17/LeetCode%E7%AC%94%E8%AE%B0/"/>
-    <id>http://example.com/2025/01/17/LeetCode%E7%AC%94%E8%AE%B0/</id>
-    <published>2025-01-17T15:13:44.000Z</published>
-    <updated>2025-01-17T15:13:44.907Z</updated>
-    
-    <content type="html"><![CDATA[]]></content>
-    
-    
-      
-      
-    <summary type="html">
-</summary>
-      
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
     <title>『吃了点啥』</title>
     <link href="http://example.com/2025/01/17/%E3%80%8E%E5%90%83%E4%BA%86%E7%82%B9%E5%95%A5%E3%80%8F/"/>
     <id>http://example.com/2025/01/17/%E3%80%8E%E5%90%83%E4%BA%86%E7%82%B9%E5%95%A5%E3%80%8F/</id>
@@ -498,6 +477,35 @@ Medical-LLM Leaderboard这几个影响力较大的评测里医疗相关任务。
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;NER：&lt;/p&gt;
 &lt;</summary>
+      
+    
+    
+    
+    <category term="Medical Informatics" scheme="http://example.com/categories/Medical-Informatics/"/>
+    
+    
+    <category term="A Stroll Through Medical Informatics" scheme="http://example.com/tags/A-Stroll-Through-Medical-Informatics/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Tasks from medical NLP challenges</title>
+    <link href="http://example.com/2025/01/07/Tasks-from-medical-NLP-challenges/"/>
+    <id>http://example.com/2025/01/07/Tasks-from-medical-NLP-challenges/</id>
+    <published>2025-01-06T17:36:54.000Z</published>
+    <updated>2025-01-06T17:39:37.563Z</updated>
+    
+    <content type="html"><![CDATA[<p>这里整理了i2b2/n2c2、TREC Biomedical Tracks、CLEFeHealth、SemEval、CCKS、CHIP这几个影响力较大的评测里医疗相关任务。</p><ul><li><p>病历记录去隐私：</p><ul><li>i2b2 (2006, 2014, 2016)</li></ul></li><li><p>医疗文本分类 (phenotyping):</p><ul><li>i2bc (2006, 2008, 2016), CHIP(2019, 2023)</li><li>吸烟状态，肥胖及合并症，疾病严重程度，临床试验筛选标准分类，糖尿病问题分类</li></ul></li><li><p>病历信息抽取：</p><ul><li>i2b2 (2009 - 2012, 2018, 2019, 2022), CLEF (2013-2021), SemEval(2014, 2015, 2017, 2023), CCKS (2017-2021), CHIP (2018, 2019 -2023)</li><li>医学概念(药物、疾病、不良事件、家族史、健康问题社会决定因素、缩写)、属性及关系并标准化，assertion/cue检测，指代消解，时间信息及时序关系，临床发现阴阳性判别，诊疗决策树抽取，病历OCR，PICOS识别</li></ul></li><li><p>病历编码：</p><ul><li><p>CHIP(2019 - 2022, 2024)</p></li><li><p>标准化编码</p></li></ul></li><li><p>病历语义相关性：</p><ul><li><p>i2b2 (2019, 2022), SemEval(2023, 2024), CCKS(2021), CHIP(2018,2019)</p></li><li><p>相似病历检测，评估与诊疗计划推理相关性，临床试验报告里文本蕴含，科普问答相关性，健康咨询问句匹配，医疗文本因果识别</p></li></ul></li><li><p>临床试验病例筛选：</p><ul><li>i2b2 (2018), TREC (2011-2012, 2017-2023)</li></ul></li><li><p>医疗相关文献检索：</p><ul><li><p>TREC (2014-2020, 2024), CLEF (2013-2021)</p></li><li><p>医务人员/健康消费者基于各方面主题检索相关文献，循证医学文献检索，利用LLM生成答案并为每一句标注文献</p></li></ul></li><li><p>医疗问答生成：</p><ul><li><p>CCKS(2020, 2021), CHIP(2018)</p></li><li><p>基于知识图谱问答，包含给定实体的对话生成，科普阅读理解</p></li></ul></li><li><p>诊断：</p><ul><li><p>CHIP (2022, 2024)</p></li><li><p>抽取诊疗决策树，中医辨证，病历诊断一致性</p></li></ul></li><li><p>其他：</p><ul><li><p>CLEF 2014: 病历信息可视化</p></li><li><p>CLEF 2015: 交班记录语音识别</p></li><li><p>CCKS 2020: 知识图谱类型、上下位关系、链接预测</p></li><li><p>CHIP 2020: 新冠趋势预测</p></li></ul></li></ul><p><strong>References</strong></p><p><ahref="https://john-theo.github.io/2019/01/09/bio_text_mining/">十年生物医学文本挖掘界竞赛：成功、失败和未来| 不太想说话</a></p><p><a href="https://n2c2.dbmi.hms.harvard.edu/challenges">PastChallenges | National NLP Clinical Challenges (n2c2)</a></p><p><a href="https://portal.dbmi.hms.harvard.edu/projects/n2c2-nlp/">n2c2NLP Research Data Sets</a></p><p><a href="https://n2c2.dbmi.hms.harvard.edu/publications">Publications| National NLP Clinical Challenges (n2c2)</a></p><p><a href="https://www.trec-cds.org/">TREC Biomedical Tracks</a></p><p><a href="https://dmice.ohsu.edu/trec-biogen/index.html">TREC 2024Biomedical Generative Retrieval (BioGen) Track</a></p><p><ahref="https://clefehealth.imag.fr/clefehealth.imag.fr/index.html">CLEFeHealth Lab Series</a></p><p><a href="https://semeval.github.io/">SemEval | International Workshopon Semantic Evaluation</a></p><p><ahref="https://sigkg.cn/ccks-ijckg2024/">2024全国知识图谱与语义计算大会和知识图谱国际联合会议联办– CCKS-IJCKG 2024– 重庆 9月20-22日</a></p><p><a href="http://www.cips-chip.org.cn/">CHIP 2024</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;这里整理了i2b2/n2c2、TREC Biomedical Tracks、CLEF
+eHealth、SemEval、CCKS、CHIP这几个影响力较大的评测里医疗相关任务。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;病历记录去隐私：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;i2b2 (</summary>
       
     
     
