@@ -352,14 +352,14 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2025-01-29
+          2025-02-19
         </span>
         
       </div>
 
       <div class="post-count">
           <span class="post-wordcount">
-            Estimated Reading Time: 1:29
+            Estimated Reading Time: 1:28
           </span>
       </div>
 
@@ -388,9 +388,8 @@ Extraction</strong></p>
 <p>用了auto-encoder的思想，相当于先对原始句向量乘每个词，再乘aspect矩阵，最后得到原始句向量，那么相当于中间过程是乘单元矩阵，也就相当于aspect矩阵就是词向量矩阵的降维逆矩阵，也就得到aspect矩阵了</p>
 <p><strong>[2017] Recurrent Attention Network on Memory for Aspect
 Sentiment Analysis</strong></p>
-<p>没意思，基本就是把Aspect Level Sentiment Classification with Deep
-Memory
-Network里的固定词向量换成了LSTM说自己有了memory层，垃圾腾讯。但这篇结果比Attention-based
+<p>把Aspect Level Sentiment Classification with Deep Memory
+Network里的固定词向量换成了LSTM说自己有了memory层。但这篇结果比Attention-based
 LSTM for Aspect-level Sentiment
 Classification好，说明这种多层attention结构确实比多层LSTM好</p>
 <p><strong>[2017] Interactive Attention Networks for Aspect-Level
@@ -403,8 +402,7 @@ Classification是一样的，只不过context和target拼接换成了circular
 convolution，有计算效率优势，有啥效果优势就不知道了</p>
 <p><strong>[2018] Left-Center-Right Separated Neural Network for
 Aspect-based Sentiment Analysis with Rotatory Attention</strong></p>
-<p>没意思，都没投出去，类似Interactive Attention Networks for
-Aspect-Level Sentiment
+<p>类似Interactive Attention Networks for Aspect-Level Sentiment
 Classification，只是把context再拆成左右，分别做attention最后得到四组向量</p>
 <p><strong>[2018] Learning Latent Opinions for Aspect-Level Sentiment
 Classification</strong></p>
@@ -416,7 +414,7 @@ Attention-over-Attention Neural Networks</strong></p>
 <p><strong>[2018] Recurrent Entity Networks with Delayed Memory Update
 for Targeted Aspect-based Sentiment Analysis</strong></p>
 <p>这个文章搞了个新的单元来除了记忆信息，大概理解是与LSTM类似但增加了一个记忆，隐状态对应这里的memory，cell
-state对应delay，memory和key两部分输入也有一些特别的交互。（总的来说就是没看懂。。。）</p>
+state对应delay，memory和key两部分输入也有一些特别的交互。</p>
 <p><strong>[2018] Aspect Term Extraction with History Attention and
 Selective Transformation</strong></p>
 <p>分THA和STN两部分分别编码aspect和opinion，THA会把历史隐状态缓存，在每步用当前隐状态和缓存算注意力，同时会加上一个history-aware
@@ -448,12 +446,12 @@ Aspect-level Sentiment Analysis</strong></p>
 embedding，值为从target词算起相对位置再映射向量，target和context分别过bi-GRU后互相做attention，两部分结果再点积后分类。</p>
 <p><strong>[2018] Hierarchical Attention Based Position-aware Network
 for Aspect-level Sentiment Analysis</strong></p>
-<p>了无新意，用的position
+<p>用的position
 embedding方式和上篇一样的，context过bi-GRU，target直接用attention算个加权词向量，两部分再做attention再分类。</p>
 <p><strong>[2018] IARM: Inter-Aspect Relation Modeling with Memory
 Networks in Aspect-Based Sentiment Analysis</strong></p>
 <p>核心假设也是利用预测aspect时要参考其他aspect，context和每个target拼接再送入GRU，再用attention学各个aspect影响，然后进一个循环的memory
-network，所有aspect输出结果作为记忆。怪怪的。。。</p>
+network，所有aspect输出结果作为记忆。</p>
 <p><strong>[2018] A Unified Model for Opinion Target Extraction and
 Target Sentiment Prediction</strong></p>
 <p>港中文大哥的集成之作，直接作为带分类的序列标注，两层LSTM，本来一把CRF输出就好了，巧妙的是用了个Maintaining
@@ -517,7 +515,7 @@ End-to-End Aspect-Based Sentiment Analysis</strong></p>
 <p><strong>[2019] Adapt or Get Left Behind: Domain Adaptation through
 BERT Language Model Finetuning for Aspect-Target Sentiment
 Classification</strong></p>
-<p>算法很简单，就是后训练，然后把context和target拼起来做分类。后训练真牛逼</p>
+<p>算法很简单，就是后训练，然后把context和target拼起来做分类。</p>
 <p><strong>[2019] A Novel Aspect-Guided Deep Transition Model for Aspect
 Based Sentiment Analysis</strong></p>
 <p>特征提取用了一个Aspect-guided GRU带几个Transition
@@ -530,7 +528,7 @@ Analysis</strong></p>
 Analysis with Selective Adversarial Learning</strong></p>
 <p>港中文大哥又一篇，先过bi-lstm，然后用softmax去标注aspect边界，这个过程用的记忆网络，多轮lstm，每轮结果记下来再去做attention，还搞两份叫dual
 memory interaction（和multi-head有点像啊），又搞了个啥Selective
-Adversarial Learning，还有个啥Alternating Training，看不下去了。。。</p>
+Adversarial Learning，还有个啥Alternating Training</p>
 <p><strong>[2019] Knowing What, How and Why: A Near Complete Solution
 for Aspect-based Sentiment Analysis</strong></p>
 <p>三元组提取，一开始兵分两路，一路走A Unified Model for Opinion Target
@@ -556,14 +554,13 @@ Network</strong></p>
 Multiple Attention Network Approach</strong></p>
 <p>先把文字和绝对位置分别编码，然后过LSTM，然后一方面经过一个自注意力，一方面用原始embedding再做个注意力相当于position
 aware attention，这两部分混合起来再做多标签分类。说是tag
-free，但其实是把分类结果固定，不行</p>
+free，但其实是把分类结果固定</p>
 <p><strong>[2020] An Iterative Multi-Knowledge Transfer Network for
 Aspect-Based Sentiment Analysis</strong></p>
 <p>要提取aspect和opinion并分类，先用bert或cnn编码，然后过5个CNN，代表五个任务，然后过一个routing
 block结构看样子就是全连接，但激活函数复杂些，分别要做aspect级和document级。</p>
 <p><strong>[2020] A Dependency Syntactic Knowledge Augmented Interactive
 Architecture for End-to-End Aspect-based Sentiment Analysis</strong></p>
-<p>没看懂</p>
 <p><strong>[2020] A Hybrid Approach for Aspect-Based Sentiment Analysis
 Using Deep Contextual Word Embeddings and Hierarchical
 Attention</strong></p>
@@ -578,7 +575,7 @@ Summarization</strong></p>
 (megagon.info)</a></p>
 <p><strong>[2020] Aspect-based Sentiment Analysis of Scientific
 Reviews</strong></p>
-<p>IIT出品，分析peer review判断结果，技术没意思，直接上各种生分类器</p>
+<p>IIT出品，分析peer review判断结果，直接上各种生分类器</p>
 <p><strong>[2020] Modelling Context and Syntactical Features for
 Aspect-based Sentiment Analysis</strong></p>
 <p>抽取和分类分两部分，抽取部分，文本用bert编码，词性用self
@@ -611,7 +608,6 @@ Opinion Spans</strong></p>
 attention，对输出用CRF后算权重再乘给输出，最后分类。</p>
 <p><strong>[2020] Weakly-Supervised Aspect-Based Sentiment Analysis via
 Joint Aspect-Sentiment Topic Embedding</strong></p>
-<p>没看懂</p>
 <p><strong>[2020] Context-Guided BERT for Targeted Aspect-Based
 Sentiment Analysis</strong></p>
 <p>验证计算attention时加入context效果，一种是把基本的Q和K用context更新一部分，一种是把Q和K的加权context做个attention再和基本attention相加</p>
