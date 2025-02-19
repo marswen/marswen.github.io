@@ -352,7 +352,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2025-01-29
+          2025-02-19
         </span>
         
       </div>
@@ -403,7 +403,7 @@ target="_blank" rel="noopener" href="https://www.ijcai.org/Proceedings/15/Papers
 <ul>
 <li>谱聚类的基本方法是需要指定簇数量的，如ganjinzero里所实现的，那个里面的分割方法用了ratio
 cut或norm cut的优化，还有<a
-target="_blank" rel="noopener" href="https://github.com/ciortanmadalina/high_noise_clustering/blob/master/spectral_clustering.ipynb">更简单的方式</a>是构建拉普拉斯矩阵后，计算特征向量，由于拉普拉斯矩阵是半正定矩阵，所以一定有与样本数相同的特征向量。将特征向量作为样本特征，直接用KNN聚类。一种叫self
+target="_blank" rel="noopener" href="https://github.com/ciortanmadalina/high_noise_clustering/blob/master/spectral_clustering.ipynb">更简单的方式</a>是构建拉普拉斯矩阵后，计算特征向量。将特征向量作为样本特征，直接用KNN聚类。一种叫self
 tuned spectral
 clustering的方法可以用来寻找最优聚类数量，要点是根据临近点归一化拉普拉斯矩阵，并且通过特征分解，旋转特征矩阵构造损失函数求得最优簇数，但每轮的速度都很慢，不适合。</li>
 <li>层次聚类从底向上合并相似数据，包里支持把层次化结果按阈值范围转成平铺结果。对小数据量(n&lt;10000)有一定效果。但当数据量大了，距离计算量平方增长，计算时间和空间都撑不住。但这个模型本身是非参的，没办法分batch学习。尝试了通过simhash把语义相似度矩阵降维后再用更简单的汉明距离计算相似度，也撑不住。</li>
