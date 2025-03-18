@@ -352,7 +352,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2025-02-14
+          2025-02-20
         </span>
         
               <span class="post-categories">
@@ -381,7 +381,7 @@
 
       <div class="post-count">
           <span class="post-wordcount">
-            Estimated Reading Time: 58 mins.
+            Estimated Reading Time: 59 mins.
           </span>
       </div>
 
@@ -645,6 +645,11 @@ class="math inline">\(C_R=\{(m·384,n·384)|m\in N,n\in N,1\leq m,n,mn
 class="math inline">\(m_i*n_i\)</span>个384×384个小图和一个全局缩略图，然后使用一个SigLIP-SO400M-384视觉编码器把所有图生成embedding。VL适配器通过一个2*2像素随机化操作压缩每个小图的token数，给缩略图每行末、小图最后一列末、缩略图和小图之间添加特殊token，然后通过两层MLP映射到LLM里。LLM基于DeepSeek
 MoE。</p>
 <p>训练流水线：分为三个阶段：VL对齐，预训练，SFT。对齐阶段，冻结LLM，训练视觉编码器和VL适配器。预训练阶段，训练所有参数。SFT阶段，训练所有参数，只监督学习答案和特殊token，不使用系统和用户提示词。</p>
+<h1 id="deepseek-prover">DeepSeek Prover</h1>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2405.14333">Paper</a></p>
+<h1 id="deepseek-prover-v1.5">DeepSeek Prover V1.5</h1>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2408.08152">Paper</a> | <a
+target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-Prover-V1.5">Code</a></p>
 <h1 id="janus">Janus</h1>
 <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2410.13848">Paper</a> | <a
 target="_blank" rel="noopener" href="https://github.com/deepseek-ai/Janus">Code</a></p>
@@ -675,7 +680,7 @@ skip connection。</p>
         <div class="prev-or-next">
           <div class="post-foot-next">
             
-              <a href="/2025/01/30/Text-VQA/" target="_self">
+              <a href="/2025/01/30/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB/" target="_self">
                 <i class="iconfont icon-chevronleft"></i>
                 <span>Prev</span>
               </a>
@@ -700,7 +705,7 @@ skip connection。</p>
     <div class="title">Contents</div>
     <div class="catalog-content">
       
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-llm"><span class="toc-text">DeepSeek LLM</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-moe"><span class="toc-text">DeepSeek MOE</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-coder"><span class="toc-text">DeepSeek Coder</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-math"><span class="toc-text">DeepSeek Math</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-v2"><span class="toc-text">DeepSeek V2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-v3"><span class="toc-text">DeepSeek V3</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-r1"><span class="toc-text">DeepSeek R1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-vl"><span class="toc-text">DeepSeek VL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-vl2"><span class="toc-text">DeepSeek VL2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#janus"><span class="toc-text">Janus</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#janusflow"><span class="toc-text">JanusFlow</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#janus-pro"><span class="toc-text">Janus Pro</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-llm"><span class="toc-text">DeepSeek LLM</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-moe"><span class="toc-text">DeepSeek MOE</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-coder"><span class="toc-text">DeepSeek Coder</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-math"><span class="toc-text">DeepSeek Math</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-v2"><span class="toc-text">DeepSeek V2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-v3"><span class="toc-text">DeepSeek V3</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-r1"><span class="toc-text">DeepSeek R1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-vl"><span class="toc-text">DeepSeek VL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-vl2"><span class="toc-text">DeepSeek VL2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-prover"><span class="toc-text">DeepSeek Prover</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#deepseek-prover-v1.5"><span class="toc-text">DeepSeek Prover V1.5</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#janus"><span class="toc-text">Janus</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#janusflow"><span class="toc-text">JanusFlow</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#janus-pro"><span class="toc-text">Janus Pro</span></a></li></ol>
       
     </div>
   </div>

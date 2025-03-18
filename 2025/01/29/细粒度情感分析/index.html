@@ -352,7 +352,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2025-02-19
+          2025-02-20
         </span>
         
       </div>
@@ -687,6 +687,11 @@ for Aspect-based Sentiment Analysis</strong></p>
 Triplet Extraction</strong></p>
 <p>通过span分类标注后对pair分类，效果竟达到SOTA。</p>
 <h1 id="key-components">Key Components</h1>
+<h2 id="ptm">PTM</h2>
+<p>预训练模型决定了模型的下限，DeBERTa &gt; RoBERTa &gt;
+BERT，中文DeBERTa，需要测试基准性能。</p>
+<p>Does syntax matter? A strong baseline for Aspect-based Sentiment
+Analysis with RoBERTa里的实验结果非常丰富，roberta比bert好不止一点</p>
 <h2 id="post-training">Post Training</h2>
 <p>用同领域语料再用MLM和NSP训练再到目标任务上fine
 tune，效果是会提升的，但不同任务的fine
@@ -694,11 +699,6 @@ tune不一定有效果。LCF-ATEPC里rest14的结果提升非常大。</p>
 <p><a
 target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/161301389">pytorch中文语言模型bert预训练代码
 - 知乎 (zhihu.com)</a></p>
-<h2 id="ptm">PTM</h2>
-<p>预训练模型决定了模型的下限，DeBERTa &gt; RoBERTa &gt;
-BERT，中文DeBERTa，需要测试基准性能。</p>
-<p>Does syntax matter? A strong baseline for Aspect-based Sentiment
-Analysis with RoBERTa里的实验结果非常丰富，roberta比bert好不止一点</p>
 <h2 id="attention">Attention</h2>
 <blockquote>
 <p>Song Y, Wang J, Jiang T, Liu Z, Rao Y. Attentional encoder network
@@ -816,7 +816,7 @@ net等操作的目的都是在给定aspect的条件下如何把和aspect相关�
     <div class="title">Contents</div>
     <div class="catalog-content">
       
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94"><span class="toc-text">文献调研</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#key-components"><span class="toc-text">Key Components</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#post-training"><span class="toc-text">Post Training</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ptm"><span class="toc-text">PTM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#attention"><span class="toc-text">Attention</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lcf-cdw"><span class="toc-text">LCF-CDW</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gnn-gcn-gat"><span class="toc-text">GNN (GCN &amp; GAT)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#unsupervised-mining"><span class="toc-text">Unsupervised mining</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94"><span class="toc-text">文献调研</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#key-components"><span class="toc-text">Key Components</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ptm"><span class="toc-text">PTM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#post-training"><span class="toc-text">Post Training</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#attention"><span class="toc-text">Attention</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lcf-cdw"><span class="toc-text">LCF-CDW</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gnn-gcn-gat"><span class="toc-text">GNN (GCN &amp; GAT)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#unsupervised-mining"><span class="toc-text">Unsupervised mining</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
       
     </div>
   </div>
