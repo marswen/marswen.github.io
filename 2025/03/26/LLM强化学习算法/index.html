@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="Dong Wen" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      LLM强化学习方法 
+      
+      
+      |
+    
+     Dong Wen&#39;s blog
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4803714_znkx49050if.css">
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Dong Wen's blog" type="application/atom+xml">
+</head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Dong Wen</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/projects/">
+          <a href="/projects/">Projects</a>
+        </li>
+      
+
+      <li class="nav-item">
+          
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+      </li>
+
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">LLM强化学习方法</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2025-03-26
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark mr-10" title="Categories"></i>
+                
+                <span class="span--category mr-8">
+                  <a href="/categories/LLM/" title="LLM">
+                    <b>#</b> LLM
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%B7%A1%E7%A4%BC/" title="大模型巡礼">
+                    <b>#</b> 大模型巡礼
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+
+      <div class="post-count">
+          <span class="post-wordcount">
+            Estimated Reading Time: 40 mins.
+          </span>
+      </div>
+
+      <div class="markdown-body">
+        <h1 id="策略梯度-policy-gradient-pg">策略梯度 (policy gradient, PG)</h1>
+<p><span class="math display">\[
+\begin{aligned}
+        \nabla \bar{R}_{\theta}&amp;=\sum_{\tau} R(\tau) \nabla
+p_{\theta}(\tau)\\&amp;=\sum_{\tau} R(\tau) p_{\theta}(\tau)
+\frac{\nabla p_{\theta}(\tau)}{p_{\theta}(\tau)} \\&amp;=
+        \sum_{\tau} R(\tau) p_{\theta}(\tau) \nabla \log
+p_{\theta}(\tau) \\
+        &amp;=\mathbb{E}_{\tau \sim p_{\theta}(\tau)}\left[R(\tau)
+\nabla \log p_{\theta}(\tau)\right]\\
+        &amp;\approx \frac{1}{N} \sum_{n=1}^{N} R\left(\tau^{n}\right)
+\nabla \log p_{\theta}\left(\tau^{n}\right) \\
+        &amp;=\frac{1}{N} \sum_{n=1}^{N} \sum_{t=1}^{T_{n}}
+R\left(\tau^{n}\right) \nabla \log p_{\theta}\left(a_{t}^{n} \mid
+s_{t}^{n}\right)
+        \end{aligned}
+\]</span></p>
+<p>添加基线：降低方差，提高稳定性</p>
+<p><span class="math display">\[
+\nabla \bar{R}_{\theta} \approx \frac{1}{N} \sum_{n=1}^{N}
+\sum_{t=1}^{T_{n}}\left(R\left(\tau^{n}\right)-b\right) \nabla \log
+p_{\theta}\left(a_{t}^{n} \mid s_{t}^{n}\right)
+\]</span></p>
+<p><span class="math display">\[
+b \approx E[R(\tau)]
+\]</span></p>
+<p>分配合适分数：<span class="math inline">\(t\)</span> 时刻动作的奖励在
+<span class="math inline">\(t\)</span> 之后 <span
+class="math inline">\(t^{\prime}\)</span>
+时的得分兑现的，越晚兑现奖励越小。</p>
+<p><span class="math display">\[
+\nabla \bar{R}_{\theta} \approx \frac{1}{N} \sum_{n=1}^{N}
+\sum_{t=1}^{T_{n}}\left(\sum_{t^{\prime}=t}^{T_{n}}
+\gamma^{t^{\prime}-t} r_{t^{\prime}}^{n}-b\right) \nabla \log
+p_{\theta}\left(a_{t}^{n} \mid s_{t}^{n}\right)
+\]</span></p>
+<p>优势函数：<span
+class="math inline">\(A^{\theta}(s_t,a_t)=R-b\)</span></p>
+<p><span class="math display">\[
+\theta \leftarrow \theta + \eta \nabla \bar{R}_\theta
+\]</span></p>
+<p>时序差分 (Temporal Difference)：每个步骤更新一次，如：REINFORCE</p>
+<p>蒙特卡洛 (Monte Carlo)：每个回合更新一次，如：Actor-Critic</p>
+<h1 id="reinforce">REINFORCE</h1>
+<p><span class="math display">\[
+\nabla \bar{R}_{\theta} \approx \frac{1}{N} \sum_{n=1}^{N}
+\sum_{t=1}^{T_{n}} G_{t}^{n} \nabla \log \pi_{\theta}\left(a_{t}^{n}
+\mid s_{t}^{n}\right)
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned} G_{t} &amp;=\sum_{k=t+1}^{T} \gamma^{k-t-1} r_{k} \\
+&amp;=r_{t+1}+\gamma G_{t+1} \end{aligned} \tag{4.8}
+\]</span></p>
+<p>马尔可夫奖励过程的贝尔曼方程——贝尔曼方程：</p>
+<p><span class="math display">\[
+V_{\pi}(s)=\mathbb{E}_{\pi}\left[r_{t+1}+\gamma
+V_{\pi}\left(s_{t+1}\right) \mid s_{t}=s\right]
+\]</span></p>
+<p>从后往前推就可以算出所有 <span class="math inline">\(G_t\)</span></p>
+<p><span class="math display">\[
+\theta \leftarrow \theta + \alpha \gamma^t G \nabla \log \pi(A_t \mid
+S_t, \theta)
+\]</span></p>
+<h1 id="proximal-policy-optimization-ppo">Proximal Policy Optimization
+(PPO)</h1>
+<p><span class="math display">\[
+\mathcal{L}_{\text{PPO}}(\theta) = -\mathbb{E}_{q \sim P(Q), o \sim
+\pi_\theta^{\text{old}}(O | q)} \left[ \frac{1}{|o|} \sum_{t=1}^{|o|}
+\min \left( \frac{\pi_\theta(o_t | q,
+o_{&lt;t})}{\pi_\theta^{\text{old}}(o_t | q, o_{&lt;t})} A_t, \
+\text{clip} \left( \frac{\pi_\theta(o_t | q,
+o_{&lt;t})}{\pi_\theta^{\text{old}}(o_t | q, o_{&lt;t})}, \ 1 -
+\epsilon, \ 1 + \epsilon \right) A_t \right) \right]
+\]</span></p>
+<p><span class="math display">\[
+r_t = r_\phi(q, o_{\leq t}) - \beta \log \frac{\pi_\theta(o_t | q,
+o_{&lt; t})}{\pi_{\text{ref}}(o_t | q, o_{&lt; t})}
+\]</span></p>
+<h1 id="direct-preference-optimization-dpo">Direct Preference
+Optimization (DPO)</h1>
+<p>去掉了奖励模型和强化学习过程，直接通过偏好数据微调。</p>
+<p><span class="math display">\[
+\mathcal{L}_{\text{DPO}}(\pi_\theta; \pi_{\text{ref}}) =
+-\mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}} \left[ \log \sigma \left(
+\beta \log \frac{\pi_\theta(y_w | x)}{\pi_{\text{ref}}(y_w | x)} - \beta
+\log \frac{\pi_\theta(y_l | x)}{\pi_{\text{ref}}(y_l | x)} \right)
+\right]
+\]</span></p>
+<h1 id="online-dpo">Online DPO</h1>
+<p>利用judge或reward
+model，在线采样，避免一次性离线采样造成灾难性遗忘。</p>
+<h1 id="exploratory-preference-optimization-xpo">Exploratory Preference
+Optimization (XPO)</h1>
+<p>类似online DPO，区别是online
+DPO每轮从一个策略中采样，XPO分别从当前和参考策略中采样，构建正负样本对，且增加前面的global
+optimism作为正则项，<span class="math inline">\(\tilde{\tau}(t) \sim
+\pi_{\text{ref}} \mid s_1(t)\)</span>。</p>
+<p><span class="math display">\[
+\mathcal{L}_{\text{XPO}}(\theta) = -\mathbb{E} \left\{ \alpha
+\sum_{i=1}^{t} \log \pi(\tilde{\tau}(i)) - \sum_{(\tau^+, \tau^-) \in
+\mathcal{D}_{\text{pref}}(t)} \log \left[ \sigma \left( \beta \log
+\frac{\pi(\tau^+)}{\pi_{\text{ref}}(\tau^+)} - \beta \log
+\frac{\pi(\tau^-)}{\pi_{\text{ref}}(\tau^-)} \right) \right] \right\}
+\]</span></p>
+<h1 id="identity-preference-optimization-ipo">Identity Preference
+Optimization (IPO)</h1>
+<p>添加正则项，使用MSE形式使梯度成identity mapping避免过拟合。</p>
+<p><span class="math display">\[
+\mathcal{L}_{\text{IPO}}(\pi_\theta; \pi_{\text{ref}}) =
+-\mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}} \left[ \log \sigma \left(
+\log \frac{\pi_\theta(y_w | x)}{\pi_{\text{ref}}(y_w | x)} - \log
+\frac{\pi_\theta(y_l | x)}{\pi_{\text{ref}}(y_l | x)} - \frac{1}{2
+\beta}\right)^2 \right]
+\]</span></p>
+<h1 id="kahneman-tversky-optimization-kto">Kahneman-Tversky Optimization
+(KTO)</h1>
+<p>只需标注好坏的单条样本，在不同标签的样本上分别学习偏好。效果比较好，可能参考模型还是免不了。</p>
+<p><span class="math display">\[
+\mathcal{L}_{\text{KTO}}(\pi_\theta, \pi_{\text{ref}}) = \mathbb{E}_{x,
+y \sim D} \left[ \lambda_y - v(x, y) \right]
+\]</span></p>
+<p><span class="math display">\[
+r_\theta(x, y) = \log \frac{\pi_\theta(y | x)}{\pi_{\text{ref}}(y | x)}
+\]</span></p>
+<p><span class="math display">\[
+z_0 = \mathcal{D}_{\text{KL}}(\pi_\theta(y&#39; | x) \|
+\pi_{\text{ref}}(y&#39; | x))
+\]</span></p>
+<p><span class="math display">\[
+v(x, y) =\begin{cases}\lambda_D \sigma(\beta (r_\theta(x, y) - z_0))
+&amp; \text{if } y \sim y_{\text{desirable}} | x \\\lambda_U
+\sigma(\beta (z_0 - r_\theta(x, y))) &amp; \text{if } y \sim
+y_{\text{undesirable}} | x\end{cases}
+\]</span></p>
+<h1 id="binary-classifier-optimization-bco">Binary Classifier
+Optimization (BCO)</h1>
+<p>考虑标签为好和坏的样本有不同的分布差异。</p>
+<p><span class="math display">\[
+\mathcal{L}_{\text{BCO}}(\theta) = -\mathbb{E}_{(x, y) \sim
+\mathcal{D}^+} \left[ \log \sigma \left( r_\theta(x, y) - \delta \right)
+\right] - \mathbb{E}_{(x, y) \sim \mathcal{D}^-} \left[ \frac{p_\psi(f =
+1 \mid x)}{p_\psi(f = 0 \mid x)} \log \sigma \left( -\left( r_\theta(x,
+y) - \delta \right) \right) \right]
+\]</span></p>
+<p><span class="math display">\[
+r_\theta(x, y) = \beta \log \frac{\pi_\theta(y \mid
+x)}{\pi_{\text{ref}}(y \mid x)}
+\]</span></p>
+<h1 id="contrastive-preference-optimization-cpo">Contrastive Preference
+Optimization (CPO)</h1>
+<p>去掉参考模型优化内存占用。</p>
+<p><span class="math display">\[
+\mathcal{L}_{CPO}(\pi_\theta; U) = -\mathbb{E}_{(x, y_w, y_l) \sim
+\mathcal{D}} \left[ \log \sigma \left( \beta \log \pi_\theta(y_w | x) -
+\beta \log \pi_\theta(y_l | x) \right) \right]
+\]</span></p>
+<p>Simple Preference Optimization (SimPO)</p>
+<p><span class="math display">\[
+\mathcal{L}_{SimPO}(\pi_\theta; U) = -\mathbb{E}_{(x, y_w, y_l) \sim
+\mathcal{D}} \left[ \log \sigma (\left( \beta \log \pi_\theta(y_w | x) -
+\gamma) \cdot (1-\alpha) - (\beta \log \pi_\theta(y_l | x) - \gamma)
+\cdot \alpha \right) \right]
+\]</span></p>
+<p>还可使用hinge、IPO。</p>
+<h1 id="odds-ratio-preference-optimization-orpo">Odds Ratio Preference
+Optimization (ORPO)</h1>
+<p>在偏好对齐的SFT里，通过OR对拒绝风格轻微惩罚即可。</p>
+<p><span class="math display">\[
+\mathcal{L}_{\text{ORPO}} = \mathbb{E}_{(x, y_w, y_l)} \left[
+\mathcal{L}_{\text{SFT}} + \lambda \cdot \mathcal{L}_{\text{OR}} \right]
+\]</span></p>
+<p><span class="math display">\[
+\text{odds}_\theta(y | x) = \frac{P_\theta(y | x)}{1 - P_\theta(y | x)}
+\]</span></p>
+<p><span class="math display">\[
+\mathcal{L}_{\text{OR}} = -\log \sigma \left( \log
+\frac{\text{odds}_\theta(y_w | x)}{\text{odds}_\theta(y_l | x)} \right)
+\]</span></p>
+<h1 id="group-relative-policy-optimization-grpo">Group Relative Policy
+Optimization (GRPO)</h1>
+<p>生成一组补全采样，通过归一化奖励计算优势，裁剪策略比例，使用KL散度无偏估计保证结果为正。</p>
+<p><span class="math display">\[
+\mathcal{L}_{\text{GRPO}}(\theta) = -\mathbb{E}_{q \sim P(Q),
+\{o_i\}_{i=1}^G \sim \pi_\theta^{\text{old}}(O | q)} \left[ \frac{1}{G}
+\sum_{i=1}^G \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} \left\{ \min \left[
+\frac{\pi_\theta(o_{i,t} | q,
+o_{i,&lt;t})}{\pi_\theta^{\text{old}}(o_{i,t} | q, o_{i,&lt;t})}
+\hat{A}_{i,t}, \text{clip} \left( \frac{\pi_\theta(o_{i,t} | q,
+o_{i,&lt;t})}{\pi_\theta^{\text{old}}(o_{i,t} | q, o_{i,&lt;t})}, 1 -
+\epsilon, 1 + \epsilon \right) \hat{A}_{i,t} \right] - \beta
+\mathcal{D}_{\text{KL}}[\pi_\theta || \pi_{\text{ref}}] \right\} \right]
+\]</span></p>
+<p><span class="math display">\[
+\hat{A}_{i,t} = \tilde{r}_i = \frac{r_i -
+\text{mean}(\mathbf{r})}{\text{std}(\mathbf{r})} 
+\]</span></p>
+<p><span class="math display">\[
+\mathcal{D}_{\text{KL}}[\pi_\theta || \pi_{\text{ref}}] =
+\frac{\pi_\theta(o_{i,t} | q, o_{i,&lt;t})}{\pi_{\text{ref}}(o_{i,t} |
+q, o_{i,&lt;t})} - \log \frac{\pi_\theta(o_{i,t} | q,
+o_{i,&lt;t})}{\pi_{\text{ref}}(o_{i,t} | q, o_{i,&lt;t})} - 1
+\]</span></p>
+<h1 id="generalized-knowledge-distillation-gkd">Generalized Knowledge
+Distillation (GKD)</h1>
+<p>JS散度，对称，更平滑。</p>
+<p><span class="math display">\[
+\mathcal{D}_{\text{JSD}}(\beta)(P \| Q) = \beta
+\mathcal{D}_{\text{KL}}\left(P \| \beta P + (1 - \beta) Q\right) + (1 -
+\beta) \mathcal{D}_{\text{KL}}\left(Q \| \beta P + (1 - \beta) Q\right)
+\]</span></p>
+<p><span class="math display">\[
+\mathcal{L}_{\text{GKD}}(\theta) := (1 - \lambda) \mathbb{E}_{(x, y)
+\sim (X, Y)} \left[ \mathcal{D}(p_T \| p_S^\theta)(y | x) \right] +
+\lambda \mathbb{E}_{x \sim X} \left[ \mathbb{E}_{y \sim p_S(\cdot | x)}
+\left[ \mathcal{D}(p_T \| p_S^\theta)(y | x) \right] \right]
+\]</span></p>
+<p>分别为真实数据上和student输出采样上，student和teacher的输出散度。</p>
+<h1 id="rlhf-reward">RLHF Reward</h1>
+<p><span class="math display">\[
+\mathcal{L} = -\log(\sigma(r(x, y_1) - r(x, y_2)))
+\]</span></p>
+<h1 id="pairwise-ranking">Pairwise Ranking</h1>
+<p>目标是最大化相似度度量Q函数。<span class="math inline">\(x, y_i,
+y_j\)</span>一起传入模型得到三组文档向量，再分别拼接 <span
+class="math inline">\(x, y\)</span>
+通过MLP得到多组得分，每个维度代表一个Q得分，取均值<span
+class="math inline">\(s_{(i,j)}\)</span>，最小化以下损失函数：</p>
+<p><span class="math display">\[
+\mathcal{L}_Q = -z_i \log(\sigma(s(i, j))) - z_j \log(1 - \sigma(s(i,
+j)))
+\]</span></p>
+<p><span class="math display">\[
+(z_i, z_j) = \begin{cases} (1, 0), &amp; \text{if } Q(y_i, y) \geq
+Q(y_j, y) \\(0, 1), &amp; \text{if } Q(y_i, y) &lt; Q(y_j, y)\end{cases}
+\]</span></p>
+<p><strong>Reference</strong></p>
+<p><a target="_blank" rel="noopener" href="https://huggingface.co/docs/trl/index">TRL - Transformer
+Reinforcement Learning</a></p>
+<p><a target="_blank" rel="noopener" href="https://huggingface.co/blog/pref-tuning">Preference Tuning
+LLMs with Direct Preference Optimization Methods</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://huggingface.co/blog/Junrulu/dpo-and-variants">大模型偏好优化技术：DPO及其变种</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2025/02/15/LLaMA%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF%E7%AC%94%E8%AE%B0/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AD%96%E7%95%A5%E6%A2%AF%E5%BA%A6-policy-gradient-pg"><span class="toc-text">策略梯度 (policy gradient, PG)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#reinforce"><span class="toc-text">REINFORCE</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#proximal-policy-optimization-ppo"><span class="toc-text">Proximal Policy Optimization
+(PPO)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#direct-preference-optimization-dpo"><span class="toc-text">Direct Preference
+Optimization (DPO)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#online-dpo"><span class="toc-text">Online DPO</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#exploratory-preference-optimization-xpo"><span class="toc-text">Exploratory Preference
+Optimization (XPO)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#identity-preference-optimization-ipo"><span class="toc-text">Identity Preference
+Optimization (IPO)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#kahneman-tversky-optimization-kto"><span class="toc-text">Kahneman-Tversky Optimization
+(KTO)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#binary-classifier-optimization-bco"><span class="toc-text">Binary Classifier
+Optimization (BCO)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#contrastive-preference-optimization-cpo"><span class="toc-text">Contrastive Preference
+Optimization (CPO)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#odds-ratio-preference-optimization-orpo"><span class="toc-text">Odds Ratio Preference
+Optimization (ORPO)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#group-relative-policy-optimization-grpo"><span class="toc-text">Group Relative Policy
+Optimization (GRPO)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#generalized-knowledge-distillation-gkd"><span class="toc-text">Generalized Knowledge
+Distillation (GKD)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#rlhf-reward"><span class="toc-text">RLHF Reward</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pairwise-ranking"><span class="toc-text">Pairwise Ranking</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/marswen">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:dongwen930910@gmail.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+        <li>
+          
+              <a title="rss" href="/atom.xml">
+                <i class="iconfont icon-rss"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+
+  <div class="footer-more">
+    Copyright © 2025 <a target="_blank" rel="noopener" href="https://github.com/marswen">Dong Wen</a>
+  </div>
+  <div class="footer-more">
+    Theme by <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Oranges</a> | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>
+  </div>
+
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + LLM%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95 + '&url=' + http%3A%2F%2Fexample.com%2F2025%2F03%2F26%2FLLM%25E5%25BC%25BA%25E5%258C%2596%25E5%25AD%25A6%25E4%25B9%25A0%25E7%25AE%2597%25E6%25B3%2595%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2025/03/26/LLM%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
