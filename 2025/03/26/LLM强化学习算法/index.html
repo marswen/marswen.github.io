@@ -381,7 +381,7 @@
 
       <div class="post-count">
           <span class="post-wordcount">
-            Estimated Reading Time: 40 mins.
+            Estimated Reading Time: 49 mins.
           </span>
       </div>
 
@@ -439,7 +439,8 @@ class="math inline">\(A^{\theta}(s_t,a_t)=R-b\)</span></p>
 \begin{aligned} G_{t} &amp;=\sum_{k=t+1}^{T} \gamma^{k-t-1} r_{k} \\
 &amp;=r_{t+1}+\gamma G_{t+1} \end{aligned}
 \]</span></p>
-<p>马尔可夫奖励过程的贝尔曼方程——贝尔曼方程：</p>
+<p>马尔可夫奖励过程的贝尔曼方程——贝尔曼方程，t时刻状态s的总收益 =
+身处状态s能带来的即时收益 + 从状态s出发后能带来的未来收益：</p>
 <p><span class="math display">\[
 V_{\pi}(s)=\mathbb{E}_{\pi}\left[r_{t+1}+\gamma
 V_{\pi}\left(s_{t+1}\right) \mid s_{t}=s\right]
@@ -464,6 +465,14 @@ o_{&lt;t})}{\pi_\theta^{\text{old}}(o_t | q, o_{&lt;t})}, \ 1 -
 r_t = r_\phi(q, o_{\leq t}) - \beta \log \frac{\pi_\theta(o_t | q,
 o_{&lt; t})}{\pi_{\text{ref}}(o_t | q, o_{&lt; t})}
 \]</span></p>
+<p><span class="math display">\[
+A_t = (r_t + \gamma V_{t+1} - V_t) + \gamma \lambda A_{t+1}
+\]</span></p>
+<p><span class="math inline">\(\pi_\theta\)</span>、 <span
+class="math inline">\(\pi_{ref}\)</span>、 <span
+class="math inline">\(r_t\)</span>、 <span
+class="math inline">\(V_t\)</span> 分别来自actor、reference
+model、reward model、critc model。</p>
 <h1 id="direct-preference-optimization-dpo">Direct Preference
 Optimization (DPO)</h1>
 <p>去掉了奖励模型和强化学习过程，直接通过偏好数据微调。</p>
@@ -474,6 +483,53 @@ Optimization (DPO)</h1>
 \log \frac{\pi_\theta(y_l | x)}{\pi_{\text{ref}}(y_l | x)} \right)
 \right]
 \]</span></p>
+<p>推导：</p>
+<p><span class="math display">\[
+\max_{\pi} \mathbb{E}_{x \sim D, y \sim \pi}[r(x, y)] - \beta
+\mathbb{D}_{\mathrm{KL}}[\pi(y|x) \| \pi_{\text{ref}}(y|x)]
+\]</span></p>
+<p><span class="math display">\[
+= \max_{\pi} \mathbb{E}_{x \sim D} \mathbb{E}_{y \sim \pi(y|x)} \left[
+r(x, y) - \beta \log \frac{\pi(y|x)}{\pi_{\text{ref}}(y|x)} \right]
+\]</span></p>
+<p><span class="math display">\[
+= \min_{\pi} \mathbb{E}_{x \sim D, y \sim \pi} \left[ \log
+\frac{\pi(y|x)}{\pi_{\text{ref}}(y|x)} - \frac{1}{\beta} r(x, y) \right]
+\]</span></p>
+<p><span class="math display">\[
+= \min_{\pi} \mathbb{E}_{x \sim D, y \sim \pi} \left[ \log
+\frac{\pi(y|x)}{\pi_{\text{ref}}(y|x) \exp \left( \frac{1}{\beta} r(x,
+y) \right)} \right]
+\]</span></p>
+<p><span class="math display">\[
+= \min_{\pi} \mathbb{E}_{x \sim D, y \sim \pi} \left[ \log
+\frac{\pi(y|x)}{\frac{1}{Z(x)} \pi_{\text{ref}}(y|x) \exp \left(
+\frac{1}{\beta} r(x, y) \right)} - \log Z(x) \right]
+\]</span></p>
+<p><span class="math inline">\(Z(x) = \sum_y \pi_{\text{ref}}(y|x) \exp
+\left( \frac{1}{\beta} r(x, y) \right)\)</span> 是归一化常数</p>
+<p>定义最优策略：<span class="math inline">\(\pi^*(y|x) = \frac{1}{Z(x)}
+\pi_{\text{ref}}(y|x) \exp \left( \frac{1}{\beta} r(x, y)
+\right)\)</span></p>
+<p><span class="math display">\[
+= \min_{\pi} \mathbb{E}_{x \sim D} \left[
+\mathbb{D}_{\mathrm{KL}}(\pi(y|x) \| \pi^*(y|x)) - \log Z(x) \right]
+\]</span></p>
+<p><span class="math inline">\(log Z(x)\)</span> 不依赖于 <span
+class="math inline">\(\pi\)</span>，可以忽略，最终得到</p>
+<p><span class="math display">\[
+\min_{\pi} \mathbb{E}_{x \sim D} \mathbb{D}_{\mathrm{KL}}(\pi(y|x) \|
+\pi^*(y|x))
+\]</span></p>
+<p>跳过奖励模型，使用Bradley-Terry模型：</p>
+<p><span class="math display">\[
+p(y_1 \succ y_2) = \frac{\exp(r(y_1))}{\exp(r(y_1)) + \exp(r(y_2))}
+\]</span></p>
+<p>带入得到：</p>
+<p><span class="math display">\[
+-\mathbb{E}_{(x, y_w, y_l)\sim D}[log\sigma[r(x, y_w)- r(x, y_l)]]
+\]</span></p>
+<p>根据上面的最优策略定义，带入即可得到最终损失函数。</p>
 <h1 id="online-dpo">Online DPO</h1>
 <p>利用judge或reward
 model，在线采样，避免一次性离线采样造成灾难性遗忘。</p>
