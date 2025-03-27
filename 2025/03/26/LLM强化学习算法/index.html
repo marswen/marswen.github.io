@@ -352,7 +352,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2025-03-26
+          2025-03-27
         </span>
         
               <span class="post-categories">
@@ -452,7 +452,7 @@ S_t, \theta)
 <h1 id="proximal-policy-optimization-ppo">Proximal Policy Optimization
 (PPO)</h1>
 <p><span class="math display">\[
-\mathcal{L}_{\text{PPO}}(\theta) = -\mathbb{E}_{q \sim P(Q), o \sim
+\mathcal{J}_{\text{PPO}}(\theta) = \mathbb{E}_{q \sim P(Q), o \sim
 \pi_\theta^{\text{old}}(O | q)} \left[ \frac{1}{|o|} \sum_{t=1}^{|o|}
 \min \left( \frac{\pi_\theta(o_t | q,
 o_{&lt;t})}{\pi_\theta^{\text{old}}(o_t | q, o_{&lt;t})} A_t, \
@@ -484,8 +484,8 @@ DPO每轮从一个策略中采样，XPO分别从当前和参考策略中采样�
 optimism作为正则项，<span class="math inline">\(\tilde{\tau}(t) \sim
 \pi_{\text{ref}} \mid s_1(t)\)</span>。</p>
 <p><span class="math display">\[
-\mathcal{L}_{\text{XPO}}(\theta) = -\mathbb{E} \left\{ \alpha
-\sum_{i=1}^{t} \log \pi(\tilde{\tau}(i)) - \sum_{(\tau^+, \tau^-) \in
+\mathcal{L}_{\text{XPO}}(\theta) = -\mathbb{E} \left\{ -\alpha
+\sum_{i=1}^{t} \log \pi(\tilde{\tau}(i)) + \sum_{(\tau^+, \tau^-) \in
 \mathcal{D}_{\text{pref}}(t)} \log \left[ \sigma \left( \beta \log
 \frac{\pi(\tau^+)}{\pi_{\text{ref}}(\tau^+)} - \beta \log
 \frac{\pi(\tau^-)}{\pi_{\text{ref}}(\tau^-)} \right) \right] \right\}
@@ -504,8 +504,8 @@ Optimization (IPO)</h1>
 (KTO)</h1>
 <p>只需标注好坏的单条样本，在不同标签的样本上分别学习偏好。效果比较好，可能参考模型还是免不了。</p>
 <p><span class="math display">\[
-\mathcal{L}_{\text{KTO}}(\pi_\theta, \pi_{\text{ref}}) = \mathbb{E}_{x,
-y \sim D} \left[ \lambda_y - v(x, y) \right]
+\mathcal{L}_{\text{KTO}}(\pi_\theta, \pi_{\text{ref}}) = -\mathbb{E}_{x,
+y \sim D} \left[ -\lambda_y + v(x, y) \right]
 \]</span></p>
 <p><span class="math display">\[
 r_\theta(x, y) = \log \frac{\pi_\theta(y | x)}{\pi_{\text{ref}}(y | x)}
@@ -568,7 +568,7 @@ Optimization (ORPO)</h1>
 Optimization (GRPO)</h1>
 <p>生成一组补全采样，通过归一化奖励计算优势，裁剪策略比例，使用KL散度无偏估计保证结果为正。</p>
 <p><span class="math display">\[
-\mathcal{L}_{\text{GRPO}}(\theta) = -\mathbb{E}_{q \sim P(Q),
+\mathcal{J}_{\text{GRPO}}(\theta) = \mathbb{E}_{q \sim P(Q),
 \{o_i\}_{i=1}^G \sim \pi_\theta^{\text{old}}(O | q)} \left[ \frac{1}{G}
 \sum_{i=1}^G \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} \left\{ \min \left[
 \frac{\pi_\theta(o_{i,t} | q,
@@ -622,6 +622,9 @@ j)))
 Q(y_j, y) \\(0, 1), &amp; \text{if } Q(y_i, y) &lt; Q(y_j, y)\end{cases}
 \]</span></p>
 <p><strong>Reference</strong></p>
+<p><a
+target="_blank" rel="noopener" href="https://datawhalechina.github.io/easy-rl/#/chapter4/chapter4">第四章
+策略梯度</a></p>
 <p><a target="_blank" rel="noopener" href="https://huggingface.co/docs/trl/index">TRL - Transformer
 Reinforcement Learning</a></p>
 <p><a target="_blank" rel="noopener" href="https://huggingface.co/blog/pref-tuning">Preference Tuning
